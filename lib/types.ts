@@ -38,4 +38,8 @@ export interface Overview extends Provenance {
   questions: Question[];
   openConflicts: number; approvedTerms: number; totalTerms: number;
   governedAgreement: number | null; ungovernedAgreement: number | null;
+  history: EvalPoint[];
+  byType: { type: string; funded: number; loggedIn: number }[];
+  requests: { type: string; open: number; closed: number }[];
+  domains: { view: string; label: string; status: string; terms: number; rows: number }[];
 }

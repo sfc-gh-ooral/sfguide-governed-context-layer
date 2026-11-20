@@ -10,6 +10,7 @@ import historyRaw from '@/data/sample/eval-history.json';
 import orchestrator from '@/data/sample/orchestrator.json';
 import termsRaw from '@/data/sample/terms.json';
 import bi from '@/data/bi-model-export.json';
+import stats from '@/data/sample/overview-stats.json';
 import { SAMPLE_DELAY_MS } from './sample-timing';
 
 type Row = Record<string, unknown>;
@@ -93,10 +94,18 @@ function withChoice(qid: string, a: AgentAnswer): AgentAnswer {
 export const mockData: ContextData = {
   async overview() {
     const t = terms();
-    const last = history().at(-1)!;
+    const h = history();
+    const last = h.at(-1)!;
+    const conflictOn = t.some((x) => x.domain === 'accounts' && (x.status === 'conflict' || x.status === 'missing'));
+    const dom = (view: string, label: string, domain: string, rows: number, status: string) =>
+      ({ view, label, status, rows, terms: t.filter((x) => x.domain === domain).length });
     return { source: 'mock', questions: QUESTIONS, openConflicts: t.filter((x) => x.status === 'conflict' || x.status === 'missing').length,
       approvedTerms: t.filter((x) => x.status === 'approved').length, totalTerms: t.length,
-      governedAgreement: last.governed, ungovernedAgreement: last.ungoverned };
+      governedAgreement: last.governed, ungovernedAgreement: last.ungoverned, history: h,
+      byType: stats.byType, requests: stats.requests,
+      domains: [dom('ACCOUNTS_SV', 'Accounts', 'accounts', stats.rows.accounts, conflictOn ? 'conflict' : 'approved'),
+        dom('SERVICE_SV', 'Service', 'service', stats.rows.service, 'approved'),
+        dom('ADVISORS_SV', 'Advisors', 'advisors', stats.rows.advisors, 'approved')] };
   },
 
   async ask(qid) {

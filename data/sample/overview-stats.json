@@ -1,0 +1,67 @@
+{
+ "capturedFrom": "Live run of sql/setup.sql (CORE.ACCOUNTS_V, CORE.SERVICE_REQUESTS_V)",
+ "byType": [
+  {
+   "type": "Cash Management",
+   "funded": 24087,
+   "loggedIn": 19603
+  },
+  {
+   "type": "Individual Brokerage",
+   "funded": 23948,
+   "loggedIn": 19455
+  },
+  {
+   "type": "Joint Brokerage",
+   "funded": 24257,
+   "loggedIn": 19783
+  },
+  {
+   "type": "Roth IRA",
+   "funded": 24163,
+   "loggedIn": 19774
+  },
+  {
+   "type": "Traditional IRA",
+   "funded": 23947,
+   "loggedIn": 19500
+  }
+ ],
+ "requests": [
+  {
+   "type": "ADDRESS_CHANGE",
+   "open": 562,
+   "closed": 6312
+  },
+  {
+   "type": "PASSWORD_RESET",
+   "open": 314,
+   "closed": 3244
+  },
+  {
+   "type": "TRANSFER",
+   "open": 291,
+   "closed": 3058
+  },
+  {
+   "type": "BENEFICIARY_CHANGE",
+   "open": 280,
+   "closed": 3066
+  },
+  {
+   "type": "STATEMENT_COPY",
+   "open": 275,
+   "closed": 3203
+  },
+  {
+   "type": "ACCOUNT_CLOSE",
+   "open": 275,
+   "closed": 3120
+  }
+ ],
+ "rows": {
+  "accounts": 140000,
+  "service": 24000,
+  "advisors": 40
+ }
+}

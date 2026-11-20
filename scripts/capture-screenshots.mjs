@@ -23,54 +23,46 @@ const CARD_SCALE = 0.6;                               // 1600x1000 CSS px -> 960
 const SCHEME = process.env.COLOR_SCHEME || "dark";   // "dark" or "light"
 
 // The walkthrough, in landing-page order. `card` marks which shots become catalog cards (in that order).
-async function approveAll(page) {
-  await page.goto(page.url().replace(/\/try\/.*$/, "/try/resolver/"));
-  const buttons = page.getByRole("button", { name: /^Approve/ });
-  await buttons.first().waitFor();
-  for (let n = await buttons.count(); n > 0; n--) {
-    await buttons.first().click();
-    await page.waitForFunction((left) => [...document.querySelectorAll("button")].filter((b) => /^Approve/.test(b.textContent ?? "")).length < left, n, { timeout: 30000 });
+// Every shot starts from a fresh browser (no approvals); `act` plays the story up to that point.
+async function approveAll(page, origin) {
+  for (const id of ["K1", "K2", "K3"]) {
+    await page.goto(`${origin}/resolver/?c=${id}`);
+    await page.getByRole("radiogroup", { name: "Choose a definition" }).getByRole("radio").first().click();
+    await page.getByRole("button", { name: /^Approve / }).click();
+    await page.getByText("Written back").waitFor({ timeout: 30000 });
   }
 }
-async function ask(page, label) {
-  await page.getByLabel("Question").selectOption({ label });
+async function ask(page, origin, qid) {
+  await page.goto(`${origin}/ask/?q=${qid}`);
   await page.getByRole("button", { name: "Ask all four agents" }).click();
-  await page.getByText("Governed agents A and B: shared context").waitFor({ timeout: 30000 });
+  await page.getByText("Judge", { exact: true }).waitFor({ timeout: 30000 });
 }
 
-// The walkthrough, in landing-page order. `card` marks which shots become catalog cards (in that order).
 const SHOTS = [
-  { name: "01-side-by-side", card: 1, path: "/", async act(page) { await ask(page, "How many active accounts do we have?"); } },
+  { name: "01-overview", card: 1, path: "/", phone: true },
+  { name: "02-disagree", card: 2, path: "/", async act(page, o) { await ask(page, o, "Q1"); } },
+  { name: "03-resolver", card: 3, path: "/resolver/?c=K1", phone: true },
   {
-    name: "02-inventory", card: 2, path: "/inventory/",
-    async act(page) { await page.locator("tbody tr.click", { hasText: "active account" }).first().click(); },
+    name: "04-inventory", card: 4, path: "/inventory/",
+    async act(page) { await page.locator("tbody tr.clickable", { hasText: "active account" }).first().click(); await page.getByRole("dialog").waitFor(); },
   },
-  { name: "03-resolver", card: 3, path: "/resolver/", wait: "text=What differs" },
+  { name: "05-agree", card: 5, path: "/", phone: true, async act(page, o) { await approveAll(page, o); await ask(page, o, "Q1"); } },
   {
-    name: "04-agreement", card: 4, path: "/",
-    async act(page) {
-      await approveAll(page);
-      await page.goto(page.url().replace(/resolver\/$/, ""));
-      await ask(page, "How do I change a client\u2019s address?");
+    name: "06-composer", card: 6, path: "/composer/",
+    async act(page) { await page.getByRole("button", { name: /^How many active accounts do we have, how many/ }).click(); await page.getByText("of 4 used").waitFor({ timeout: 30000 }); },
+  },
+  {
+    name: "07-monitor", card: 7, path: "/", phone: true,
+    async act(page, o) {
+      await approveAll(page, o);
+      await page.goto(`${o}/monitor/`);
+      await page.getByRole("button", { name: "Run consistency eval" }).click();
+      await page.locator("tbody tr.clickable").first().waitFor({ timeout: 30000 });
     },
   },
-  {
-    name: "05-composer", card: 5, path: "/composer/",
-    async act(page) {
-      await page.getByRole("button", { name: /^How many active accounts do we have, how many/ }).click();
-      await page.getByText("Domains used:").waitFor({ timeout: 30000 });
-    },
-  },
-  {
-    name: "06-monitor", card: 6, path: "/",
-    async act(page) {
-      await approveAll(page);
-      await page.goto(page.url().replace(/resolver\/$/, "monitor/"));
-      await page.getByRole("button", { name: "Run the eval now" }).click();
-      await page.getByText("Judge note (governed)").waitFor({ timeout: 30000 });
-    },
-  },
+  { name: "08-overview-after", path: "/", async act(page, o) { await approveAll(page, o); await page.goto(`${o}/`); } },
 ];
+const PHONE = { width: 390, height: 844 };
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".txt": "text/plain", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".woff2": "font/woff2", ".ico": "image/x-icon" };
 
@@ -105,21 +97,20 @@ async function main() {
   const browser = await chromium.launch();
   try {
     for (const shot of SHOTS) {
-      for (const [scale, out] of [
-        [PAGE_SCALE, join(DOCS, "images", `${shot.name}.png`)],
-        ...(shot.card ? [[CARD_SCALE, join(DOCS, "catalog", `${CARD_ID}-${shot.card}.jpg`)]] : []),
-      ]) {
+      const outs = [[VIEWPORT, PAGE_SCALE, join(DOCS, "images", `${shot.name}.png`)]];
+      if (shot.card) outs.push([VIEWPORT, CARD_SCALE, join(DOCS, "catalog", `${CARD_ID}-${shot.card}.jpg`)]);
+      if (shot.phone) outs.push([PHONE, 2, join(DOCS, "images", `${shot.name}-phone.png`)]);
+      for (const [viewport, scale, out] of outs) {
         const context = await browser.newContext({
-          viewport: VIEWPORT, deviceScaleFactor: scale, colorScheme: SCHEME, reducedMotion: "reduce",
+          viewport, deviceScaleFactor: scale, colorScheme: SCHEME, reducedMotion: "reduce",
           // Fixed locale and time zone so dates render the same on every machine.
           locale: "en-US", timezoneId: "America/New_York",
         });
         const page = await context.newPage();
         await page.goto(origin + shot.path);
-        if (shot.wait) await page.locator(shot.wait).first().waitFor();
         await settle(page);
-        if (shot.act) { await shot.act(page); await settle(page); }
-        await page.screenshot({ path: out, ...(out.endsWith(".jpg") ? { type: "jpeg", quality: 82 } : {}) });
+        if (shot.act) { await shot.act(page, origin); await settle(page); }
+        await page.screenshot({ path: out, ...(out.endsWith(".jpg") ? { type: "jpeg", quality: 80 } : {}) });
         await context.close();
         console.log(`${out.replace(ROOT + "/", "")}  ${Math.round(statSync(out).size / 1024)} KB`);
       }

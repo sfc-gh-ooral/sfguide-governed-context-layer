@@ -2,7 +2,7 @@
 
 Everything here is synthetic and generated deterministically: the wiki pages and BI export by
 `scripts/generate-data.mjs`, and the large tables by seeded `HASH()` logic in `sql/setup.sql`.
-Every run produces the same rows. The firm, Northwind Financial, and every person named are fictional.
+Every run produces the same rows: each column hashes the row number with its own fixed salt (`HASH(n, 1)` … `HASH(n, 35)`), so the salts are the seed. The firm, Northwind Financial, and every person named are fictional.
 
 | Data | Rows | Notes |
 | --- | --- | --- |
@@ -41,6 +41,10 @@ Every run produces the same rows. The firm, Northwind Financial, and every perso
 Runs started from the app or the nightly task are real: every agent is called and an `AI_COMPLETE` judge
 decides agreement. In our live test on this data set, the governed pair agreed on 6 of 6 questions after the
 three approvals, and the ungoverned pair on 2 to 3 of 6, depending on the run.
+
+## Sample-mode data
+
+`data/sample/overview-stats.json` holds the overview's charts (both "active" definitions by account type, service requests by type, row counts), captured from a live run on 2026-11-20. On this data set the account types sum to exactly 120,402 funded and 98,115 logged-in accounts.
 
 ## Sample-mode AI text
 

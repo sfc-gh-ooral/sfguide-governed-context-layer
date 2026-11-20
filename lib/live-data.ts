@@ -84,12 +84,25 @@ async function evalHistory(): Promise<EvalPoint[]> {
 
 export const liveData: ContextData = {
   async overview() {
-    const [[qs, t, h], latencyMs] = await timed(() => Promise.all([questions(), terms(), evalHistory()]));
+    const [[qs, t, h, types, reqs, sv, counts], latencyMs] = await timed(() => Promise.all([questions(), terms(), evalHistory(),
+      query<Row>(`SELECT account_type, SUM(funded_flag) AS funded, SUM(recent_login_flag) AS logged_in FROM CORE.ACCOUNTS_V GROUP BY 1 ORDER BY 1`),
+      query<Row>(`SELECT request_type, COUNT_IF(status IN ('OPEN','IN_PROGRESS')) AS open_n, COUNT_IF(status = 'CLOSED') AS closed_n
+                  FROM CORE.SERVICE_REQUESTS_V GROUP BY 1 ORDER BY 2 DESC`),
+      svStatus(),
+      query<Row>(`SELECT (SELECT COUNT(*) FROM CORE.ACCOUNTS) AS a, (SELECT COUNT(*) FROM CORE.SERVICE_REQUESTS) AS s, (SELECT COUNT(*) FROM CORE.ADVISORS) AS v`),
+    ]));
     const last = h.at(-1);
+    const c = counts[0];
+    const dom = (view: string, label: string, domain: string, rows: number) => ({ view, label, status: sv[view] ?? 'unknown', rows,
+      terms: t.filter((x) => x.domain === domain).length });
     return { source: 'snowflake', latencyMs, questions: qs,
       openConflicts: t.filter((x) => x.status === 'conflict' || x.status === 'missing').length,
       approvedTerms: t.filter((x) => x.status === 'approved').length, totalTerms: t.length,
-      governedAgreement: last?.governed ?? null, ungovernedAgreement: last?.ungoverned ?? null };
+      governedAgreement: last?.governed ?? null, ungovernedAgreement: last?.ungoverned ?? null, history: h,
+      byType: types.map((r) => ({ type: String(r.ACCOUNT_TYPE), funded: Number(r.FUNDED), loggedIn: Number(r.LOGGED_IN) })),
+      requests: reqs.map((r) => ({ type: String(r.REQUEST_TYPE), open: Number(r.OPEN_N), closed: Number(r.CLOSED_N) })),
+      domains: [dom('ACCOUNTS_SV', 'Accounts', 'accounts', Number(c.A)), dom('SERVICE_SV', 'Service', 'service', Number(c.S)),
+        dom('ADVISORS_SV', 'Advisors', 'advisors', Number(c.V))] };
   },
 
   async ask(qid) {

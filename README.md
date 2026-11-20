@@ -2,7 +2,7 @@
 
 Help institutions give consistent answers when several AI agents touch the same data. Capture business context once, in governed semantic views and an approved procedure index, then reuse it in every agent.
 
-This is a Snowflake example on **synthetic data** for a fictional firm, Northwind Financial. It's a Next.js app with a no-account mode and a live mode built on semantic views (with synonyms and a verified query), Cortex Search, three Cortex Agents, AI_EXTRACT, AI_COMPLETE, Horizon Catalog tags, and a Snowflake task.
+This is a Snowflake example on **synthetic data** for a fictional firm, Northwind Financial. The app is branded as **Veritome**, a fictional context-ledger product (design notes in [docs/DESIGN.md](docs/DESIGN.md)). It's a Next.js app with a no-account mode and a live mode built on semantic views (with synonyms and a verified query), Cortex Search, three Cortex Agents, AI_EXTRACT, AI_COMPLETE, Horizon Catalog tags, and a Snowflake task.
 
 **[Try the hosted example](https://sfc-gh-ooral.github.io/sfguide-governed-context-layer/try/)** · **[Guide](https://sfc-gh-ooral.github.io/sfguide-governed-context-layer/)**
 
@@ -16,6 +16,7 @@ Each team ships an agent fast. Under the hood, each agent is often one LLM call 
 
 | Screen | What you see | Snowflake capability (live mode) |
 | --- | --- | --- |
+| Overview | The planted disagreement (120,402 vs. 98,115) next to the governed answer, agreement KPIs, the nightly agreement trend, both "active" definitions by account type, open conflicts, and each domain view's tagged status. A story rail across the top tracks the five beats | Semantic views, `CONTEXT_STATUS` tag (`SYSTEM$GET_TAG`), queries on `CORE` views |
 | Side by side | One question asked of Agent A and Agent B with their own prompts, and of the governed agents A and B. An AI judge says whether each pair agrees | `AI_COMPLETE` (own-prompt agents and judge), two Cortex Agents sharing `ACCOUNTS_SV` and `PROCEDURES_SEARCH` |
 | Context inventory | Glossary terms and metrics with owner, source (wiki, BI, inferred), and status (draft, conflict, missing, approved), with drill-down. Also the file-based BI import compared with the semantic view, and the definitions mined from 30 wiki pages | `AI_EXTRACT`, semantic views, `CONTEXT_STATUS` and `CONTEXT_OWNER` tags |
 | Conflict resolver | Conflicting definitions side by side with an AI explanation. The owner picks one, adds a note, and approves | `AI_COMPLETE`; `APPROVE_DEFINITION` rebuilds `ACCOUNTS_SV` from the glossary, marks the losing page superseded, refreshes Cortex Search, and updates the tag |
@@ -29,7 +30,7 @@ Each team ships an agent fast. Under the hood, each agent is often one LLM call 
 2. **A conflict is surfaced.** The inventory flags *active account* and *address change* as conflicts, and *net new accounts (30 days)* as defined in BI but missing from the semantic view.
 3. **The owner approves a definition.** In the resolver, the owner picks one definition and the semantic view is rebuilt.
 4. **Both agents agree.** The old address page leaves the search index, and the BI metric joins the view.
-5. **The monitor shows agreement climbing.** In our live runs, after the three approvals the governed pair agreed on 6 of 6 questions and the ungoverned pair on 2–3 of 6.
+5. **The monitor shows agreement climbing.** In our live runs, after the three approvals the governed pair agreed on 6 of 6 questions and the ungoverned pair on 2–3 of 6 (the November 20, 2026 run: 100% vs. 33%). Before approval, the governed pair already agreed on active accounts (the view uses the WIKI-03 definition provisionally while the term is tagged conflict) but could not answer net new accounts.
 
 See [data/README.md](data/README.md) for how the stories are planted.
 
@@ -104,16 +105,16 @@ To replay the story in live mode, run `sql/setup.sql` again. It replaces the exa
 ### Expected cost and time
 
 - **Setup:** about 1 minute on XSMALL (47–65 s in our runs), including AI_EXTRACT over 30 pages and three AI_COMPLETE explanations.
-- **Warehouse credits:** in our test, 3 full setups, 4 full evals, and a walkthrough of every screen used **0.59 credits** on XSMALL in total.
-- **AI credits:** Cortex AI functions, Cortex Agents, Cortex Analyst, and Cortex Search are billed separately. A full eval makes 12 agent calls and 24 AI_COMPLETE calls. Check your usage in `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_USAGE_HISTORY` and `CORTEX_AGENT_USAGE_HISTORY` (they can lag by a few hours). See the [Service Consumption Table](https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf) for rates.
-- **Measured latency** in our test, from the app server:
-  - Screens load in 0.3–2 s.
+- **Warehouse credits:** on November 20, 2026, one full setup, every screen in Live mode, three approvals and one full eval used **0.24 credits** on XSMALL (`WAREHOUSE_METERING_HISTORY`). Earlier testing (3 setups, 4 evals) used 0.59 credits.
+- **AI credits:** Cortex AI functions, Cortex Agents, Cortex Analyst, and Cortex Search are billed separately. A full eval makes 12 Cortex Agent calls, 12 own-prompt AI_COMPLETE calls and 12 AI_COMPLETE judge calls. Check your usage in `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AISQL_USAGE_HISTORY` and `CORTEX_AGENT_USAGE_HISTORY` (they can lag by a few hours). See the [Service Consumption Table](https://www.snowflake.com/legal-files/CreditConsumptionTable.pdf) for rates.
+- **Measured latency** on November 20, 2026, from the app server:
+  - Screens load in 0.6–7 s (the overview's first call includes connecting).
   - Re-extract one page with AI_EXTRACT: about 2 s.
-  - AI explanation: about 5 s.
-  - Approve: 5–15 s.
-  - Ask all four agents: 10–15 s.
+  - AI explanation: about 5.5 s.
+  - Approve: 11–19 s.
+  - Ask all four agents: 15–27 s.
   - Orchestrator: about 18 s.
-  - Full eval: about 3.5–3.7 minutes.
+  - Full eval: about 3.7 minutes.
 
   Yours will differ.
 
@@ -136,15 +137,16 @@ To replay the story in live mode, run `sql/setup.sql` again. It replaces the exa
 
 ```text
 app/                  Next.js App Router pages and the /api/data and /api/mode routes
-components/           Shell, mode switch, reasoning steps, UI pieces
+components/           Shell (top nav and story rail), mode switch, reasoning steps, charts, UI pieces
 lib/context-data.ts   Data interface used by every screen
 lib/mock-data.ts      No-account implementation (runs in the browser)
 lib/live-data.ts      Snowflake implementation (server only)
 lib/snowflake.ts      Connection as GCL_DEMO_ROLE, bind variables
-scripts/              generate-data.mjs, build-hosted-example.mjs, capture-screenshots.mjs, run-sql.mjs
+lib/story.ts          The five story beats shown in the story rail
+scripts/              generate-data.mjs, build-hosted-example.mjs, capture-screenshots.mjs, check-contrast.mjs, run-sql.mjs
 sql/                  setup.sql, cleanup.sql
 data/                 Wiki pages, BI export, captured sample outputs, data README
-docs/                 GitHub Pages guide, screenshots, and the /try/ static example
+docs/                 GitHub Pages guide, DESIGN.md, fonts, screenshots, catalog cards, and the /try/ static example
 ```
 
 `npm run build:example` builds the static, no-account example into `docs/try/`, and `npm run capture` refreshes the screenshots from it.

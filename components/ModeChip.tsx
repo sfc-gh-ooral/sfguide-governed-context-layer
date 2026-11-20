@@ -31,20 +31,26 @@ export function ModeChip() {
 
   return (
     <>
-      <div className={`mode-switch ${live ? 'is-live' : 'is-sample'}`} role="radiogroup" aria-label="Data source">
-        <button role="radio" aria-checked={!live} onClick={() => choose('sample')}
-          title="Bundled synthetic data; AI answers are scripted samples">
-          <FlaskConical className="w-3.5 h-3.5" aria-hidden />Sample
-        </button>
-        <button role="radio" aria-checked={live} onClick={() => choose('live')}
-          title={configured ? 'Data and AI answers from your Snowflake account' : 'Needs a Snowflake connection'}>
-          {live && <span className="mode-dot" aria-hidden />}<Database className="w-3.5 h-3.5" aria-hidden />Live
-        </button>
+      <div className="flex items-center rounded-[10px] p-0.5 border" style={{ background: 'var(--surface-2)', borderColor: 'var(--line)' }}
+        role="radiogroup" aria-label="Data source">
+        {(['sample', 'live'] as const).map((m) => {
+          const on = mode === m;
+          return (
+            <button key={m} role="radio" aria-checked={on} onClick={() => choose(m)}
+              title={m === 'sample' ? 'Bundled synthetic data; AI answers are scripted samples' : configured ? 'Data and AI answers from your Snowflake account' : 'Needs a Snowflake connection'}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-xs font-semibold transition-colors"
+              style={on ? { background: m === 'live' ? 'var(--accord)' : 'var(--sample)', color: '#0b0e12' } : { color: 'var(--text-2)' }}>
+              {m === 'live' ? <Database className="w-3.5 h-3.5" aria-hidden /> : <FlaskConical className="w-3.5 h-3.5" aria-hidden />}
+              {m === 'live' ? 'Live' : 'Sample'}
+            </button>
+          );
+        })}
       </div>
+      <span className="hidden xl:inline-flex pill pill-quiet mono" title="Environment">{live ? 'env: snowflake' : 'env: sample'}</span>
 
       {help && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setHelp(false)}>
-          <div role="dialog" aria-modal="true" aria-labelledby="live-help-title" className="card fade-up max-w-lg w-full p-5"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70" onClick={() => setHelp(false)}>
+          <div role="dialog" aria-modal="true" aria-labelledby="live-help-title" className="panel fade-up max-w-lg w-full p-5"
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between gap-3 mb-3">
               <h2 id="live-help-title" className="text-base font-semibold">Connect Snowflake to use Live mode</h2>

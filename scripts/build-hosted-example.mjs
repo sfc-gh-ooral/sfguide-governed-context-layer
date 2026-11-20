@@ -22,5 +22,4 @@ rmSync("docs/try", { recursive: true, force: true });
 cpSync("out", "docs/try", { recursive: true });
 // Pages runs Jekyll from docs/, which would drop the _next folder; .nojekyll must sit in docs/.
 writeFileSync("docs/.nojekyll", "");
-writeFileSync("docs/try/.nojekyll", "");
 console.log("Hosted example written to docs/try/");

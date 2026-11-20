@@ -5,154 +5,198 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>One Answer Across Agents · Snowflake example</title>
 <meta name="description" content="Give consistent answers across AI agents by capturing business context once in governed semantic views and reusing it everywhere. A Snowflake example on synthetic data.">
+<meta name="color-scheme" content="dark">
 <style>
+/* Veritome identity (docs/DESIGN.md): graphite, lime for agreement, coral for disagreement. */
+@font-face { font-family: "Space Grotesk"; src: url(fonts/space-grotesk-latin.woff2) format("woff2"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url(fonts/jetbrains-mono-latin.woff2) format("woff2"); font-weight: 100 800; font-display: swap; }
 :root {
-  color-scheme: light dark;
-  --bg: light-dark(#f6f7fb, #0d1220);
-  --card: light-dark(#ffffff, #141b2d);
-  --card-2: light-dark(#f0f2f8, #1b2439);
-  --border: light-dark(#dde1ec, #2a3550);
-  --text: light-dark(#141a2e, #e8ecf6);
-  --text-2: light-dark(#4a5373, #aab3cc);
-  --muted: light-dark(#6b7493, #8590ad);
-  --accent: light-dark(#1a6fd1, #5aa7f5);
-  --accent-soft: light-dark(rgba(26,111,209,.1), rgba(90,167,245,.14));
-  --warn-soft: light-dark(#fff6e6, #2b2414);
-  --warn-border: light-dark(#f0c36d, #6b5420);
+  --bg: #0b0e12; --surface: #12161c; --surface-2: #1a2029; --line: #263040;
+  --text: #e8edf2; --text-2: #a9b4c2; --muted: #8592a3;
+  --accord: #c8f25a; --drift: #ff7a5c; --source: #5ed0e8; --draft: #f5b841;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
-a { color: var(--accent); }
-img, svg { max-width: 100%; height: auto; }
-.wrap { max-width: 1080px; width: 100%; margin: 0 auto; padding: 0 clamp(16px, 4vw, 28px); }
-header.top { border-bottom: 1px solid var(--border); background: var(--card); }
-header.top .wrap { display: flex; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
-.mark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; }
-.brand { font-weight: 650; }
-.brand small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
-nav.links { margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
-nav.links a { text-decoration: none; color: var(--text-2); }
-nav.links a:hover { color: var(--accent); }
-.hero { padding-top: clamp(36px, 7vw, 72px); padding-bottom: 28px; }
-.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
-h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 10px 0 16px; letter-spacing: -.01em; }
-.lede { font-size: clamp(17px, 2.2vw, 19px); color: var(--text-2); max-width: 760px; margin: 0 0 24px; }
-.cta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
-.btn { display: inline-block; padding: 10px 16px; border-radius: 9px; border: 1px solid var(--border); background: var(--card); color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
-.fact { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
-.fact b { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-.note { background: var(--warn-soft); border: 1px solid var(--warn-border); border-radius: 10px; padding: 12px 16px; font-size: 14px; margin: 22px 0 0; }
-section { padding: 44px 0; border-top: 1px solid var(--border); }
-h2 { font-size: clamp(24px, 3.4vw, 30px); margin: 0 0 10px; }
-h3 { font-size: 18px; margin: 0 0 6px; }
-.sub { color: var(--text-2); max-width: 760px; margin: 0 0 24px; }
-.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 "Space Grotesk", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--accord); }
+code, .mono { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-size: .88em; }
+code { background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+header.top { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; gap: 12px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.02em; text-decoration: none; color: var(--text); }
+.brand small { display: block; font-weight: 400; font-size: 11.5px; color: var(--muted); letter-spacing: 0; margin-top: -3px; }
+nav.links { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+nav.links a { color: var(--text-2); text-decoration: none; }
+nav.links a:hover { color: var(--text); }
+@media (max-width: 720px) { nav.links a:not(.keep) { display: none; } }
+.hero { padding: clamp(40px, 8vw, 96px) 0 48px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 28px; } }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(34px, 5.4vw, 60px); line-height: 1.02; letter-spacing: -.035em; margin: 14px 0 18px; font-weight: 600; }
+h1 em { font-style: normal; color: var(--accord); }
+.lede { color: var(--text-2); font-size: clamp(16px, 2vw, 18px); max-width: 600px; margin: 0 0 26px; }
+.cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--surface-2); }
+.btn.primary { background: var(--accord); border-color: var(--accord); color: #0b0e12; }
+.split { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: clamp(18px, 3vw, 30px); }
+.split .q { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.split .row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.split .num { font-size: clamp(40px, 6vw, 64px); font-weight: 600; letter-spacing: -.04em; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--drift); }
+.split .who { font-size: 13px; color: var(--text-2); }
+.split svg { width: 100%; height: 56px; margin: 8px 0; }
+.split .one { font-size: clamp(22px, 3vw, 30px); font-weight: 600; letter-spacing: -.02em; color: var(--accord); }
+.split .one span { display: block; font-size: 13px; font-weight: 400; color: var(--text-2); letter-spacing: 0; }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+@media (max-width: 800px) { .facts { grid-template-columns: 1fr 1fr; } }
+.fact { background: var(--surface); padding: 16px 18px; font-size: 14px; color: var(--text-2); }
+.fact b { display: block; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.note { border: 1px solid rgba(245,184,65,.4); background: rgba(245,184,65,.08); border-radius: 12px; padding: 12px 16px; font-size: 14px; color: var(--text-2); }
+.note strong { color: var(--draft); }
+section { padding: clamp(48px, 7vw, 80px) 0; border-top: 1px solid var(--line); }
+h2 { font-size: clamp(26px, 3.6vw, 38px); letter-spacing: -.03em; line-height: 1.1; margin: 8px 0 12px; font-weight: 600; }
+h3 { font-size: 18px; margin: 0 0 6px; letter-spacing: -.01em; }
+.sub { color: var(--text-2); max-width: 720px; margin: 0 0 28px; }
+.who3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 800px) { .who3 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
 .card p { margin: 0; color: var(--text-2); font-size: 15px; }
-figure { margin: 0 0 34px; }
-figure img { display: block; width: 100%; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
-figcaption { margin-top: 10px; font-size: 15px; color: var(--text-2); }
-figcaption .cap { display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 1px 9px; margin-right: 6px; }
-.step { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; align-items: start; }
-.table-wrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-th { background: var(--card-2); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
-code { background: var(--card-2); padding: 1px 5px; border-radius: 4px; }
-pre { background: var(--card-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 0 0 14px; }
-pre code { background: none; padding: 0; }
-ul { padding-left: 20px; }
-li { margin: 4px 0; }
-footer { border-top: 1px solid var(--border); padding: 28px 0 44px; color: var(--muted); font-size: 14px; }
-@media (max-width: 560px) { nav.links { margin-left: 0; width: 100%; gap: 12px; } }
+.card .k { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.shot { margin: 0 0 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.shot img { width: 100%; border-bottom: 1px solid var(--line); }
+.shot figcaption { display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 16px 20px; font-size: 15px; color: var(--text-2); }
+.shot .n { font-family: "JetBrains Mono", monospace; font-size: 26px; font-weight: 500; color: var(--accord); line-height: 1; }
+.shot .cap { display: inline-block; font-size: 12px; font-weight: 600; color: var(--source); background: rgba(94,208,232,.12); border-radius: 999px; padding: 1px 9px; margin-bottom: 6px; }
+.phones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 40px; }
+@media (max-width: 800px) { .phones { grid-template-columns: 1fr 1fr; } }
+.phones img { border: 1px solid var(--line); border-radius: 16px; }
+.phones figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.hero > *, .two > *, .who3 > * { min-width: 0; }
+.table-wrap { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14.5px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--surface-2); color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .07em; }
+td { color: var(--text-2); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; font-size: 13.5px; }
+pre code { background: none; border: 0; padding: 0; }
+ol, ul { color: var(--text-2); padding-left: 20px; }
+li { margin: 6px 0; }
+footer { border-top: 1px solid var(--line); padding: 26px 0; font-size: 14px; color: var(--muted); }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <div class="mark" aria-hidden="true">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/></svg>
-    </div>
-    <div class="brand">One Answer Across Agents<small>A Snowflake example on synthetic data</small></div>
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#C8F25A"/><path d="M8 9c5 0 7 7 8 7M8 23c5 0 7-7 8-7h8" fill="none" stroke="#0B0E12" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="16" r="2.6" fill="#0B0E12"/></svg>
+      <span>One Answer Across Agents<small>A Snowflake example · fictional brand Veritome</small></span>
+    </a>
     <nav class="links" aria-label="Page sections">
       <a href="#walkthrough">Walkthrough</a>
       <a href="#how-it-works">How it works</a>
       <a href="#get-started">Get started</a>
-      <a href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">Repository</a>
+      <a class="keep" href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">Repository</a>
     </nav>
   </div>
 </header>
 
-<main>
-<div class="wrap hero" id="problem">
-  <div class="eyebrow">Financial Services · Operations</div>
-  <h1>Get the same answer from every agent</h1>
-  <p class="lede">Teams ship AI agents fast, and each one often has its own prompt and its own definitions. When an account opening agent and an account maintenance agent both answer "How many active accounts do we have?", they can disagree, because the business context lives in wikis, BI models, and people's heads. This example captures that context once in governed semantic views and an approved procedure index. A data owner resolves conflicting definitions, every agent reuses the result, and a nightly check tracks whether the agents agree.</p>
-  <div class="cta">
-    <a class="btn primary" href="try/">Try the example in your browser</a>
-    <a class="btn" href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">View the repository</a>
+<main id="top">
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Financial Services · Operations</div>
+      <h1>Your agents disagree. <em>Give them one book of definitions.</em></h1>
+      <p class="lede">Teams ship AI agents fast, and each one carries its own prompt and its own idea of what "active account" means. Ask the account opening agent and the account maintenance agent the same question and you can get two numbers, because business context lives in wikis, BI models and people's heads. This example captures that context once in governed semantic views and an approved procedure index. An owner resolves conflicting definitions, every agent reuses the result, and a nightly check shows whether they still agree.</p>
+      <div class="cta">
+        <a class="btn primary" href="try/">Try the example in your browser →</a>
+        <a class="btn" href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">View the repository</a>
+      </div>
+    </div>
+    <div class="split" aria-label="Two agents give two answers that converge into one governed answer">
+      <div class="q">"How many active accounts do we have?" · synthetic data</div>
+      <div class="row"><span class="num">120,402</span><span class="who">Agent A, account opening<br>open and funded</span></div>
+      <div class="row"><span class="num">98,115</span><span class="who">Agent B, account maintenance<br>logged in within 90 days</span></div>
+      <svg viewBox="0 0 400 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 6 C 160 6, 200 28, 400 28" fill="none" stroke="#FF7A5C" stroke-width="2"/><path d="M0 50 C 160 50, 200 28, 400 28" fill="none" stroke="#FF7A5C" stroke-width="2"/><path d="M300 28 H400" stroke="#C8F25A" stroke-width="3"/></svg>
+      <div class="one">One governed answer.<span>Both agents read <code>active_accounts</code> from one semantic view after the owner approves a definition.</span></div>
+    </div>
   </div>
+
   <div class="facts">
-    <div class="fact"><b>No-account mode</b>Runs in the browser on synthetic data; nothing to install</div>
+    <div class="fact"><b>No account</b>Runs in your browser on synthetic data; nothing to install</div>
     <div class="fact"><b>Live mode</b>Enterprise Edition; Cortex AI functions, Agents, Analyst, Search</div>
     <div class="fact"><b>Setup time</b>About 1 minute in one Snowsight worksheet on XSMALL</div>
-    <div class="fact"><b>Measured cost</b>0.59 warehouse credits on XSMALL for our whole test, plus AI usage</div>
+    <div class="fact"><b>Measured cost</b>0.24 warehouse credits for setup, every screen and one full eval, plus AI usage</div>
   </div>
-  <p class="note"><strong>Synthetic data, illustrative logic.</strong> Northwind Financial and every person named are fictional. This is not production, regulatory, or compliance advice.</p>
+  <p class="note"><strong>Synthetic data, illustrative logic.</strong> Veritome, Northwind Financial and every person named are fictional. This is not production, regulatory or compliance advice, and not an official Snowflake product.</p>
 </div>
 
 <section>
   <div class="wrap">
-    <h2>Who it's for</h2>
-    <div class="grid3">
-      <div class="card"><h3>Data product owners</h3><p>Curate one glossary of terms, metrics, and procedures, and decide which definition wins when sources disagree.</p></div>
-      <div class="card"><h3>Agent builders</h3><p>Point agents at governed semantic views and a shared search index instead of writing definitions into prompts.</p></div>
-      <div class="card"><h3>Business users</h3><p>Get the same answer to the same question, whichever agent they ask.</p></div>
+    <div class="eyebrow">Who it's for</div>
+    <h2>Three people, one definition</h2>
+    <div class="who3">
+      <div class="card"><div class="k" style="color:var(--source)">Data product owner</div><h3>Curates the context</h3><p>Keeps one glossary of terms, metrics and procedures, and decides which definition wins when sources disagree.</p></div>
+      <div class="card"><div class="k" style="color:var(--accord)">Agent builder</div><h3>Reuses it</h3><p>Points agents at governed semantic views and a shared search index instead of writing definitions into prompts.</p></div>
+      <div class="card"><div class="k" style="color:var(--drift)">Business user</div><h3>Gets one answer</h3><p>Asks any agent the same question and gets the same facts back, with the definition cited.</p></div>
     </div>
   </div>
 </section>
 
 <section id="walkthrough">
   <div class="wrap">
-    <h2>Walkthrough</h2>
-    <p class="sub">The story on this synthetic data set: two agents disagree, a conflict is surfaced, the owner approves a definition, both agents agree, and the monitor shows agreement climbing. Screenshots are from the no-account example; its AI text was captured from a live run.</p>
-    <figure>
-      <img src="images/01-side-by-side.png" alt="Side by side: the same question asked of four agents" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">Cortex Agents · AI_COMPLETE</span>Asked "How many active accounts do we have?", the two own-prompt agents answer 120,402 and 98,115 on this synthetic data set. The governed agents both read the <code>active_accounts</code> metric from one semantic view, and an AI judge marks the pairs.</figcaption>
+    <div class="eyebrow">Walkthrough</div>
+    <h2>Disagree, surface, approve, agree, monitor</h2>
+    <p class="sub">The story on this synthetic data set, shown in the no-account example. Its AI text was captured from a live run in Snowflake and is labeled Sample AI response in the app.</p>
+
+    <figure class="shot">
+      <img src="images/01-overview.png" alt="Overview: 120,402 and 98,115 active accounts from two agents, a governed answer waiting on the owner, agreement KPIs, an agreement trend, open conflicts and domain semantic views" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">01</span><span><span class="cap">Semantic Views · Horizon tags</span><br>The overview puts the disagreement first: two agents give 120,402 and 98,115 active accounts on this synthetic data set. KPI tiles, the nightly agreement trend, open conflicts and each domain semantic view's tagged status sit underneath.</span></figcaption>
     </figure>
-    <figure>
-      <img src="images/02-inventory.png" alt="Context inventory: glossary with owners, sources, and status" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">Semantic Views · Horizon Catalog tags</span>Every term the agents rely on, with its owner, source (wiki, BI, or inferred), and status. Conflicts and a BI metric missing from the semantic view are flagged; each view carries <code>CONTEXT_STATUS</code> and <code>CONTEXT_OWNER</code> tags.</figcaption>
+    <figure class="shot">
+      <img src="images/02-disagree.png" alt="Side by side: the ungoverned agents disagree on active accounts while the governed agents give the same number and cite ACCOUNTS_SV" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">02</span><span><span class="cap">Cortex Agents · Cortex Analyst · AI_COMPLETE</span><br>The same question goes to four agents. The two own-prompt agents (AI_COMPLETE) disagree; the governed agents (Cortex Agents with Cortex Analyst) read one metric and cite it. An AI_COMPLETE judge marks each pair.</span></figcaption>
     </figure>
-    <figure>
-      <img src="images/03-resolver.png" alt="Conflict resolver: two definitions side by side with an AI explanation" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">AI_EXTRACT · AI_COMPLETE</span>AI_EXTRACT mined a definition from each of 30 wiki pages, and AI_COMPLETE explains how the conflicting ones differ. The owner picks one and approves it, which rebuilds the semantic view.</figcaption>
+    <figure class="shot">
+      <img src="images/03-resolver.png" alt="Conflict resolver: WIKI-03 funded definition and WIKI-11 logged-in definition side by side, with an AI explanation of the differences" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">03</span><span><span class="cap">AI_EXTRACT · AI_COMPLETE</span><br>AI_EXTRACT mined a definition from each of 30 wiki pages. Where approved pages disagree, AI_COMPLETE explains the difference for the owner, who picks one. Approval rebuilds the semantic view.</span></figcaption>
     </figure>
-    <figure>
-      <img src="images/04-agreement.png" alt="After approval: both governed agents give the same address-change steps" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">Cortex Search</span>Approving the current procedure marks the 2019 page superseded, so Cortex Search stops returning it. The own-prompt agents still disagree; the governed ones agree.</figcaption>
+    <figure class="shot">
+      <img src="images/04-inventory.png" alt="Context inventory: glossary table with a term drawer showing the active account definition, semantic view expression, synonyms and owner" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">04</span><span><span class="cap">Horizon tags · Semantic Views</span><br>Every term the agents use, with owner, source (wiki, BI or inferred) and status. The drawer shows where a term lives in the semantic view, its expression and synonyms.</span></figcaption>
     </figure>
-    <figure>
-      <img src="images/05-composer.png" alt="Domain composer: one orchestrator over three semantic views" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">Cortex Agents · Cortex Analyst</span>One orchestrator agent routes each part of the question to the Accounts, Service, or Advisors semantic view and shows which view answered, without merging them into one model.</figcaption>
+    <figure class="shot">
+      <img src="images/05-agree.png" alt="After approval: the governed agents agree and the story rail shows four beats done" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">05</span><span><span class="cap">Cortex Search · Semantic Views</span><br>After the owner approves, superseded pages drop out of Cortex Search and the BI metric joins the view. Asked again, the governed agents agree; the own-prompt agents still don't.</span></figcaption>
     </figure>
-    <figure>
-      <img src="images/06-monitor.png" alt="Consistency monitor: agreement rate by night, climbing after approval" width="2000" height="1250" loading="lazy">
-      <figcaption><span class="cap">Snowflake Tasks · AI_COMPLETE</span>A nightly task asks the question bank of every agent, and an AI_COMPLETE judge scores agreement. Earlier points are seeded history on this synthetic data set; the last point is a run after the approvals.</figcaption>
+    <figure class="shot">
+      <img src="images/06-composer.png" alt="Domain composer: the orchestrator routes a three-part question to the Accounts, Service and Advisors semantic views" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">06</span><span><span class="cap">Cortex Agents · Cortex Analyst</span><br>One orchestrator agent routes each part of a question to the Accounts, Service or Advisors semantic view and shows which view answered, without merging them into one model.</span></figcaption>
     </figure>
+    <figure class="shot">
+      <img src="images/07-monitor.png" alt="Consistency monitor: governed agreement 100 percent and ungoverned 33 percent on the latest run, with a dashed seeded history" width="2000" height="1250" loading="lazy">
+      <figcaption><span class="n">07</span><span><span class="cap">Snowflake Tasks · AI_COMPLETE</span><br>A nightly task asks the question bank of every agent and an AI_COMPLETE judge scores agreement. Dashed points are seeded history on this synthetic data set; solid points are real runs.</span></figcaption>
+    </figure>
+
+    <h3>On a phone</h3>
+    <div class="phones">
+      <figure style="margin:0"><img src="images/01-overview-phone.png" alt="Overview at phone width" width="780" height="1688" loading="lazy"><figcaption>Overview</figcaption></figure>
+      <figure style="margin:0"><img src="images/03-resolver-phone.png" alt="Conflict resolver at phone width" width="780" height="1688" loading="lazy"><figcaption>Conflict resolver</figcaption></figure>
+      <figure style="margin:0"><img src="images/05-agree-phone.png" alt="Side by side after approval at phone width" width="780" height="1688" loading="lazy"><figcaption>Agents agree</figcaption></figure>
+      <figure style="margin:0"><img src="images/07-monitor-phone.png" alt="Consistency monitor at phone width" width="780" height="1688" loading="lazy"><figcaption>Monitor</figcaption></figure>
+    </div>
   </div>
 </section>
 
 <section id="how-it-works">
   <div class="wrap">
-    <h2>How it works</h2>
-    <p class="sub">Each capability below ran in live mode on a Snowflake Enterprise account in November 2026.</p>
+    <div class="eyebrow">How it works</div>
+    <h2>Every capability here ran in Live mode</h2>
+    <p class="sub">Tested on a Snowflake Enterprise account in November 2026.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Step</th><th>Snowflake capability</th><th>What it does here</th></tr></thead>
@@ -161,9 +205,9 @@ footer { border-top: 1px solid var(--border); padding: 28px 0 44px; color: var(-
           <tr><td>Explain conflicts</td><td><a href="https://docs.snowflake.com/en/sql-reference/functions/ai_complete">AI_COMPLETE</a></td><td>Says what differs between conflicting definitions and what the owner should check.</td></tr>
           <tr><td>Publish context</td><td><a href="https://docs.snowflake.com/en/user-guide/views-semantic/overview">Semantic views</a> with synonyms and a verified query</td><td>A stored procedure compiles approved glossary metrics into <code>ACCOUNTS_SV</code>. Service and Advisors have their own views.</td></tr>
           <tr><td>Status and ownership</td><td><a href="https://docs.snowflake.com/en/user-guide/object-tagging/introduction">Object tags</a> (Horizon Catalog)</td><td><code>CONTEXT_STATUS</code> and <code>CONTEXT_OWNER</code> on each semantic view.</td></tr>
-          <tr><td>Procedures</td><td><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search/cortex-search-overview">Cortex Search</a></td><td>Indexes wiki pages that aren't superseded, so approved procedures are the only ones agents see.</td></tr>
+          <tr><td>Procedures</td><td><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search/cortex-search-overview">Cortex Search</a></td><td>Indexes wiki pages that aren't superseded, so agents only see approved procedures.</td></tr>
           <tr><td>Agents</td><td><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents">Cortex Agents</a> with Cortex Analyst</td><td>Two team agents share the same view and index; an orchestrator routes across three domain views.</td></tr>
-          <tr><td>Consistency check</td><td><a href="https://docs.snowflake.com/en/user-guide/tasks-intro">Tasks</a> and AI_COMPLETE</td><td>Asks a question bank of every agent each night and judges whether each pair gives the same facts.</td></tr>
+          <tr><td>Consistency check</td><td><a href="https://docs.snowflake.com/en/user-guide/tasks-intro">Tasks</a> and AI_COMPLETE</td><td>Asks a question bank of every agent and judges whether each pair gives the same facts.</td></tr>
         </tbody>
       </table>
     </div>
@@ -173,7 +217,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 0 44px; color: var(-
 
 <section id="get-started">
   <div class="wrap">
-    <h2>Get started</h2>
+    <div class="eyebrow">Get started</div>
+    <h2>Try it, then run it in your account</h2>
     <div class="two">
       <div>
         <h3>No account</h3>
@@ -182,20 +227,19 @@ footer { border-top: 1px solid var(--border); padding: 28px 0 44px; color: var(-
 cd sfguide-governed-context-layer
 npm install
 npm run dev</code></pre>
-        <p class="sub">AI answers in this mode are captured samples, labeled <strong>Sample AI response</strong>.</p>
       </div>
       <div>
         <h3>Your Snowflake account</h3>
         <ol>
-          <li>Run <a href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer/blob/main/sql/setup.sql"><code>sql/setup.sql</code></a> in a Snowsight worksheet. It creates a dedicated database, an XSMALL warehouse, and a least-privilege role.</li>
+          <li>Run <a href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer/blob/main/sql/setup.sql"><code>sql/setup.sql</code></a> in a Snowsight worksheet. It creates a dedicated database, an XSMALL warehouse and a least-privilege role.</li>
           <li>Register a key pair for your user and copy <code>.env.example</code> to <code>.env.local</code>.</li>
-          <li>Run <code>npm run dev</code>. Each screen shows measured latency.</li>
+          <li>Run <code>npm run dev</code> and switch to Live. Each AI panel shows measured latency.</li>
           <li>When you're done, run <code>sql/cleanup.sql</code>.</li>
         </ol>
-        <p class="sub">Requires Enterprise Edition or higher for object tags. The README lists every object created, the expected cost, and the full steps.</p>
+        <p class="sub">Requires Enterprise Edition or higher for object tags. The README lists every object, the cost and the full steps.</p>
       </div>
     </div>
-    <h3 style="margin-top:20px">Customize with Cortex Code</h3>
+    <h3 style="margin-top:24px">Customize with Cortex Code</h3>
     <ul>
       <li>"Read my wiki export and draft a glossary of candidate terms with source citations. Don't create objects yet."</li>
       <li>"Generate semantic views for my account and service domains from query history, then list overlaps between them."</li>
@@ -206,20 +250,21 @@ npm run dev</code></pre>
 
 <section id="limits">
   <div class="wrap">
-    <h2>Limits and disclaimer</h2>
+    <div class="eyebrow">Limits</div>
+    <h2>What to keep in mind</h2>
     <ul>
       <li>Results such as 120,402 versus 98,115 active accounts are planted stories on this synthetic data set.</li>
-      <li>The "ungoverned" agents are a baseline: AI_COMPLETE with each team's own prompt, definition, and bookmarked page.</li>
+      <li>The "ungoverned" agents are a baseline: AI_COMPLETE with each team's own prompt, definition and bookmarked page.</li>
       <li>Agreement is judged by an LLM, so borderline answers can change between runs. Earlier monitor points are seeded history.</li>
-      <li>Latency depends on your account, region, model, and warehouse. The app shows measured times in live mode only.</li>
+      <li>Latency depends on your account, region, model and warehouse; the app shows measured times in Live mode only.</li>
     </ul>
-    <p class="note">This is an illustrative example provided as is. It is not an official Snowflake product, it isn't supported by Snowflake Support, and it contains no customer data. Apache 2.0 license.</p>
+    <p class="note">This is an illustrative example provided as is. It is not an official Snowflake product, isn't supported by Snowflake Support, and contains no customer data. Apache 2.0 license.</p>
   </div>
 </section>
 </main>
 
 <footer>
-  <div class="wrap">Owner: Oz Oral · Last reviewed: November 2026 · <a href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">Repository</a> · <a href="https://docs.snowflake.com/">Snowflake documentation</a></div>
+  <div class="wrap">Owner: Oz Oral · Last reviewed: November 2026 · <a href="https://github.com/sfc-gh-ooral/sfguide-governed-context-layer">Repository</a> · <a href="https://docs.snowflake.com/">Snowflake documentation</a> · Fonts: SIL Open Font License</div>
 </footer>
 </body>
 </html>
