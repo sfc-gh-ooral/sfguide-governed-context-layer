@@ -88,7 +88,7 @@ export default function Inventory() {
         <Kpi label="Gaps" value={inv.data ? String(count('missing') + count('draft')) : '…'} sub="Missing in a view, or draft" />
       </div>
 
-      <div className="grid xl:grid-cols-[1fr_380px] gap-4 items-start">
+      <div className="grid xl:grid-cols-[1fr_380px] gap-4 items-start [&>*]:min-w-0">
         <Card title="Glossary" right={<><PoweredBy>Semantic Views</PoweredBy><PoweredBy>Horizon Catalog tags</PoweredBy>{inv.data && <SourceBadge p={inv.data} />}</>}>
           <div className="flex flex-wrap gap-3 mb-3 text-xs">
             <div className="seg flex" role="group" aria-label="Filter by status">
