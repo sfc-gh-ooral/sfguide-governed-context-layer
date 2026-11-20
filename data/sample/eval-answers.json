@@ -1,0 +1,218 @@
+[
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q1",
+  "ANSWER_A": "We have **120,402 active accounts** as of November 15, 2026. That number comes from the governed `active_accounts` metric in the Accounts model, using the approved query for this question. I didn't pull the metric's written definition, so I can't tell you exactly what counts as \"active,\" but I can look it up if you need it.",
+  "ANSWER_B": "We have **120,402 active accounts** as of the 2026-11-15 as-of date. That number comes from the governed `active_accounts` metric in the Accounts model, using the approved query for this exact question. I didn't open the model's comment for that metric, so I can't tell you exactly how it decides an account is \"active.\"",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: 120,402 active accounts as of November 15, 2026, sourced from the governed active_accounts metric in the Accounts model using an approved query. Both also acknowledge they don't have the exact definition of \"active.\" The wording differences (e.g., \"written definition\" vs \"model's comment\", \"I can look it up\" vs \"how it decides\") are stylistic and don't contradict each other."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q2",
+  "ANSWER_A": "Changing a client's address takes four steps, and the change takes effect within 1 business day. First, verify the client's identity with two-factor authentication in the service console, then submit a service request of type ADDRESS_CHANGE with the new address. A confirmation letter is then mailed to both the old and the new address. These steps come from WIKI-07, \"Procedure: change a client address (current).\"",
+  "ANSWER_B": "Changing a client's address takes four steps, according to WIKI-07 (Procedure: change a client address (current)):\n1. Verify the client's identity with two-factor authentication in the service console.\n2. Submit a service request of type ADDRESS_CHANGE with the new address.\n3. The change takes effect within 1 business day. That's also the service level target for address changes.\n4. A confirmation letter is mailed to both the old and the new address.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: (1) four steps are required, (2) verify client identity with two-factor authentication in the service console, (3) submit a service request of type ADDRESS_CHANGE with the new address, (4) the change takes effect within 1 business day, and (5) a confirmation letter is mailed to both old and new addresses. Answer 2 adds that 1 business day is also the service level target, which is an additional detail that doesn't contradict Answer 1. The ordering of information differs (Answer 2 lists the timing as step 3 while Answer 1 mentions it upfront), but all the same factual elements are present in both answers."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q3",
+  "ANSWER_A": "We have **120,402 funded accounts** as of 2026-11-15. This number comes from the governed `funded_accounts` metric, which defines a funded account as \"an OPEN account with a balance greater than zero on the as-of date\" (approved definition, source WIKI-04, owned by Account Operations).",
+  "ANSWER_B": "You have **120,402 funded accounts** as of November 15, 2026. That number comes from the approved `funded_accounts` metric (WIKI-04), which counts an account as funded when it's OPEN and has a balance greater than zero on the as-of date.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: 120,402 funded accounts as of 2026-11-15 (November 15, 2026), sourced from the funded_accounts metric (WIKI-04), with the same definition that a funded account is an OPEN account with a balance greater than zero on the as-of date. The only differences are in wording, tone (one uses \"we have\" vs \"you have\"), and minor formatting details like whether the date owner information is included, which do not contradict each other."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q4",
+  "ANSWER_A": "The average balance of funded accounts is about **$240,593**, across 120,402 funded accounts, as of 2026-11-15. I used the `average_balance` metric, which is defined as \"Mean balance across funded accounts\" (source: WIKI-24, owner: Data Office). A funded account is an OPEN account with a balance greater than zero on the as-of date (`funded_accounts`, source: WIKI-04). I also averaged the balance using only the funded-account flag, and it gave the same number.",
+  "ANSWER_B": "The average balance of funded accounts is about **$240,593**, across 120,402 funded accounts as of 2026-11-15. This uses the governed `average_balance` metric, defined as the \"mean balance across funded accounts\" (WIKI-24, Data Office). A funded account is \"an OPEN account with a balance greater than zero on the as-of date\" (WIKI-04). I also checked it by averaging only the funded accounts directly, and got the same number.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide identical core facts: the average balance is $240,593, there are 120,402 funded accounts, the date is 2026-11-15, they both used the average_balance metric, they both reference the same metric definition and sources (WIKI-24, WIKI-04, Data Office), they both define funded accounts the same way (OPEN account with balance > zero), and they both mention verifying by averaging funded accounts directly with the same result. The differences are only in wording and phrasing, not in the factual content."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q5",
+  "ANSWER_A": "Net new accounts for the last 30 days were **370**: 1,099 accounts opened minus 729 closed, measured against the data's as-of date of 2026-11-15. I used the approved `net_new_accounts_30d` metric (source: BI:net_new_accounts_30d, owner: Data Office, Helen Okafor), which defines it as \"accounts opened in the last 30 days minus accounts closed in the last 30 days.\" That definition says it comes from the BI export and is missing from the main accounts model, so check it against the BI report if you need the official number.",
+  "ANSWER_B": "There were **370 net new accounts** in the last 30 days: 1,099 opened minus 729 closed. The window counts back from the data's as-of date of 2026-11-15, not from today.\n\nI used the **net_new_accounts_30d** definition, which is accounts opened in the last 30 days minus accounts closed in the last 30 days (owner: Data Office, Helen Okafor; source: BI:net_new_accounts_30d). That definition says it comes from the BI export and isn't in ACCOUNTS_SV, so it may not match other reports exactly.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: 370 net new accounts, calculated as 1,099 opened minus 729 closed, measured over the last 30 days from the as-of date of 2026-11-15. Both reference the same metric (net_new_accounts_30d), same owner (Data Office, Helen Okafor), same source (BI:net_new_accounts_30d), and same caveat that the metric comes from BI export and is not in the main accounts model. The differences are only in wording and presentation style, not in the factual content."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q6",
+  "ANSWER_A": "A beneficiary change on an IRA takes 3 business days. You verify the client's identity, collect the signed beneficiary form, and submit a service request of type BENEFICIARY_CHANGE. This comes from the procedure page WIKI-08, \"Procedure: beneficiary change,\" and the same steps apply to transfer-on-death accounts.",
+  "ANSWER_B": "Changing a beneficiary on an IRA takes three steps:\n\n1. Verify the client's identity.\n2. Get the signed beneficiary form.\n3. Submit a service request with the type **BENEFICIARY_CHANGE**.\n\nIt takes 3 business days to complete. These steps come from the procedure page WIKI-08, \"Procedure: beneficiary change.\"",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: (1) it takes 3 business days, (2) the same three steps are listed (verify identity, collect signed form, submit BENEFICIARY_CHANGE service request), and (3) the information comes from WIKI-08. Answer 1 includes an additional note about transfer-on-death accounts, but this does not contradict Answer 2 - it's simply extra information. The core facts answering the question are identical."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q1",
+  "ANSWER_A": "1. We have **120,402 active accounts**.\n\nThis number represents all accounts that have been funded, which is our team's definition of an active account.",
+  "ANSWER_B": "We have **98,115 active accounts**. These are clients who have logged in within the past 90 days.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The two answers provide different numbers for active accounts (120,402 vs 98,115) and use different definitions of \"active\" (funded accounts vs logged in within past 90 days). These are contradictory core facts."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q2",
+  "ANSWER_A": "1. The client must send a **signed letter by mail** requesting the address change.\n2. After Operations completes a medallion signature check, they will key the change within **5 business days**.",
+  "ANSWER_B": "1. Verify the client's identity with two-factor authentication in the service console, then submit a service request type ADDRESS_CHANGE with the new address. 2. The change takes effect within 1 business day, and confirmation letters will be mailed to both the old and new addresses.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The two answers describe completely different processes with different facts. Answer 1 requires a signed letter by mail with medallion signature check and takes 5 business days. Answer 2 uses two-factor authentication with an online service request and takes 1 business day. These are contradictory procedures with different steps, methods, and timelines."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q3",
+  "ANSWER_A": "1. We have **120,402 funded accounts**.\n2. This is because your team counts active accounts as those that are funded, and your query shows 120,402 active accounts.",
+  "ANSWER_B": "I don't have information about the number of funded accounts. The data provided only shows we have 98,115 active accounts based on login activity within 90 days.",
+  "AGREE": false,
+  "JUDGE_NOTE": "Answer 2 explicitly states it cannot answer the question about funded accounts, while Answer 1 provides a specific number (120,402 funded accounts). When one answer says it cannot answer, they do not agree."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q4",
+  "ANSWER_A": "1. I cannot determine the average balance of funded accounts from the information provided.\n\n2. While we have 120,402 active (funded) accounts, the query or procedure does not include balance data needed to calculate an average.",
+  "ANSWER_B": "I don't have information about the average balance of funded accounts in the materials provided to me.\n\nThe information I have only covers the definition of active accounts (98,115 total based on 90-day login criteria) and the procedure for changing client addresses.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers agree on the core fact: they cannot provide the average balance of funded accounts. While Answer 1 mentions having data about 120,402 active accounts and Answer 2 mentions 98,115 total accounts, these different numbers don't contradict each other because they appear to be referring to different metrics or contexts (Answer 1 says \"funded accounts\" while Answer 2 says \"total based on 90-day login criteria\"). The key point is that both answers explicitly state they cannot answer the question about average balance due to lack of information, which is the same core fact."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q5",
+  "ANSWER_A": "1. I cannot determine the net new accounts in the last 30 days because the team query only shows the current total of 120,402 active accounts, not historical data or account closures.\n\n2. You would need to compare this current total against the active account count from 30 days ago and account for any closed accounts during that period to calculate net new accounts.",
+  "ANSWER_B": "I don't have access to data about net new accounts in the last 30 days. You would need to run a query for accounts created in the past 30 days minus any accounts closed during that same period.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers agree on the core facts: (1) They cannot provide the net new accounts figure, (2) To calculate net new accounts, you need to account for both new accounts created and accounts closed during the 30-day period. Answer 1 mentions a current total of 120,402 active accounts, but this is contextual information about what data is available, not a fact that contradicts Answer 2. The fundamental message that they cannot answer the question and the methodology needed (accounting for both additions and closures) is the same in both answers."
+ },
+ {
+  "PHASE": "after",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q6",
+  "ANSWER_A": "1. You'll need to contact our operations team, as beneficiary changes on IRAs require different documentation than address changes.\n2. While I can confirm our address change process requires a signed letter and medallion signature with 5 business days processing, beneficiary updates follow a separate procedure that I don't have details for in my current reference materials.",
+  "ANSWER_B": "I don't have a bookmarked procedure for changing an IRA beneficiary in the information provided. Please consult our official IRA beneficiary change procedures or contact a supervisor for the correct process.",
+  "AGREE": false,
+  "JUDGE_NOTE": "Answer 2 explicitly states it cannot answer the question about IRA beneficiary changes, while Answer 1 provides some factual information (contact operations team, requires different documentation than address changes, mentions specific address change requirements). When one answer says it cannot answer, the answers do not agree per the guidelines."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q1",
+  "ANSWER_A": "There are **120,402 active accounts** as of the data's as-of date, November 15, 2026. That number is the governed `active_accounts` metric in the Accounts semantic view, pulled with the verified query for this exact question.",
+  "ANSWER_B": "Northwind Financial has **120,402 active accounts** as of 2026-11-15. The number comes from the `active_accounts` metric in the Accounts model, using the verified query for this question. I didn't pull up that metric's written description, so ask if you want the exact rule for what makes an account \"active.\"",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide the same core facts: 120,402 active accounts as of November 15, 2026 (expressed as 2026-11-15 in Answer 2), sourced from the active_accounts metric in the Accounts semantic view/model using a verified query. The differences are only in wording, tone, and additional context (Answer 1 mentions \"governed metric\" while Answer 2 mentions \"Northwind Financial\" and offers to provide more details about the metric definition). The essential numbers, date, and data source are identical."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q2",
+  "ANSWER_A": "Under the current procedure (WIKI-07), you verify the client's identity with two-factor authentication in the service console, then submit a service request of type ADDRESS_CHANGE with the new address. The change takes effect within 1 business day, and a confirmation letter goes to both the old and the new address. Don't use the 2019 version (WIKI-19), which asked for a signed letter by mail and a medallion signature check and took 5 business days; the current page replaces it.",
+  "ANSWER_B": "There are four steps to change a client's address. First, verify the client's identity with two-factor authentication in the service console. Next, submit a service request of type ADDRESS_CHANGE with the new address. The change takes effect within 1 business day, and a confirmation letter goes to both the old and the new address.\n\nThese steps come from the current procedure page, WIKI-07. Don't use the 2019 version (WIKI-19), which needed a mailed signed letter and 5 business days. It's been replaced.",
+  "AGREE": false,
+  "JUDGE_NOTE": "Answer 1 mentions a \"medallion signature check\" as part of the old WIKI-19 procedure, while Answer 2 does not mention this requirement. This is a factual difference in what steps were included in the old procedure. All other facts are the same: both mention WIKI-07 as current, two-factor authentication, ADDRESS_CHANGE request type, 1 business day for the change to take effect, confirmation letters to both addresses, WIKI-19 as the old version requiring a signed letter by mail and taking 5 business days, and that the old version has been replaced."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q3",
+  "ANSWER_A": "We have **120,402 funded accounts** as of 2026-11-15. I used the approved `funded_accounts` metric (source WIKI-04, owner Account Operations), which counts an OPEN account with a balance greater than zero on the as-of date.",
+  "ANSWER_B": "We have **120,402 funded accounts** as of November 15, 2026. I used the approved `funded_accounts` metric from Account Operations (source WIKI-04), which counts an OPEN account with a balance above zero on the as-of date.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide identical facts: the same number (120,402 funded accounts), the same date (2026-11-15/November 15, 2026), the same metric name (funded_accounts), the same source (WIKI-04), the same owner (Account Operations), and the same definition (OPEN account with balance greater than/above zero on the as-of date). The only differences are in wording and formatting (date format, \"greater than\" vs \"above,\" word order), which should be ignored per the instructions."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q4",
+  "ANSWER_A": "The average balance of funded accounts is about **$240,593**, across 120,402 funded accounts as of 2026-11-15. I used the approved `average_balance` metric, defined as \"mean balance across funded accounts\" (source: WIKI-24, owner Helen Okafor, Data Office). A funded account is an OPEN account with a balance greater than zero on the as-of date (WIKI-04), and averaging only those accounts gives the same figure.",
+  "ANSWER_B": "The average balance across funded accounts is **about $240,593**, spread over 120,402 funded accounts as of 2026-11-15. I used the approved `average_balance` metric (\"Mean balance across funded accounts,\" source WIKI-24). A funded account is defined as \"an OPEN account with a balance greater than zero on the as-of date\" (`funded_accounts`, WIKI-04).",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers provide identical factual information: the average balance is $240,593, there are 120,402 funded accounts, the date is 2026-11-15, both reference the average_balance metric from WIKI-24 (with owner Helen Okafor and Data Office mentioned in Answer 1), both define funded accounts the same way citing WIKI-04, and both explain it's mean balance across funded OPEN accounts with balance greater than zero. The only differences are in wording and presentation style, not in the actual numbers, steps, timing, or facts conveyed."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q5",
+  "ANSWER_A": "There were **370 net new accounts** in the last 30 days: 1,099 accounts opened and 729 closed. I used the definition on page WIKI-15 (Glossary: net new accounts), which says net new accounts for a period are the accounts opened in that period minus the accounts closed in it. The Accounts model has no net new metric of its own, so I calculated it from the 30-day opened and closed flags, which cover the 30 days before the data's as-of date of 2026-11-15.",
+  "ANSWER_B": "I can't give you a net new accounts number yet, because Northwind Financial hasn't defined \"net new accounts\" anywhere I can see. The Accounts model has governed metrics for active, funded and total accounts, average balance and event counts, but nothing for net new. I'm not allowed to make up a business definition.\n\nThe model does track which accounts were opened and which were closed in the last 30 days. If you tell me which definition your team uses, or have the metric owner confirm one (for example, opened minus closed in the last 30 days), I can run the numbers right away.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The answers provide completely different facts. Answer 1 gives specific numbers (370 net new accounts, 1,099 opened, 729 closed) and states it used a definition from page WIKI-15. Answer 2 states no calculation was performed because no definition exists, provides no numbers for net new accounts, and asks the user to provide a definition. These are fundamentally different factual outcomes - one claims to have found and applied a definition with results, while the other claims no definition exists and therefore no calculation was done."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "governed",
+  "QUESTION_ID": "Q6",
+  "ANSWER_A": "To change a beneficiary on an IRA, you verify the client's identity, collect the signed beneficiary form, and submit a service request of type BENEFICIARY_CHANGE. It takes 3 business days to complete, and that matches the service level target for beneficiary changes. These steps come from the procedure page WIKI-08, \"Procedure: beneficiary change.\"",
+  "ANSWER_B": "There are three steps: verify the client's identity, collect the signed beneficiary form, and submit a service request with type BENEFICIARY_CHANGE. It takes 3 business days. These steps come from the procedure page WIKI-08, \"Procedure: beneficiary change,\" which covers both IRA and transfer-on-death accounts.",
+  "AGREE": false,
+  "JUDGE_NOTE": "Answer 1 mentions that the 3 business days \"matches the service level target for beneficiary changes,\" which is an additional fact not present in Answer 2. Answer 2 states that WIKI-08 covers \"both IRA and transfer-on-death accounts,\" which is information not present in Answer 1. While both answers share the same core facts (3 steps, 3 business days, WIKI-08 source), they each contain unique factual information that the other does not."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q1",
+  "ANSWER_A": "1. We have **120,402 active accounts**.\n\n2. This count reflects accounts that have been funded according to our team's definition of \"active.\"",
+  "ANSWER_B": "We have **98,115 active accounts**. These are clients who have logged in within the last 90 days.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The two answers provide different factual information. Answer 1 states there are 120,402 active accounts defined by funding status, while Answer 2 states there are 98,115 active accounts defined by login activity within the last 90 days. The numbers are different (120,402 vs 98,115) and the definitions of \"active\" are different (funded accounts vs accounts with logins in the last 90 days)."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q2",
+  "ANSWER_A": "1. The client must send a signed letter by mail, which Operations will verify with a medallion signature check.\n2. Allow 5 business days for Operations to key the address change after verification.",
+  "ANSWER_B": "1. Verify the client's identity with two-factor authentication in the service console, then submit service request type ADDRESS_CHANGE with the new address. 2. The change takes effect within 1 business day, and confirmation letters will be mailed to both the old and new addresses.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The two answers provide completely different facts. Answer 1 describes a mail-based process requiring a signed letter with medallion signature verification and 5 business days for processing. Answer 2 describes a digital process using two-factor authentication through a service console with 1 business day processing time and confirmation letters sent to both addresses. The steps, timing (5 days vs 1 day), and verification methods (medallion signature vs two-factor authentication) are all different."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q3",
+  "ANSWER_A": "1. We have **120,402 funded accounts**.\n2. This count represents all accounts that meet our team's definition of \"active\" (funded status).",
+  "ANSWER_B": "I don't have information about the number of funded accounts. The information provided only indicates we have 98,115 active accounts based on 90-day login activity.",
+  "AGREE": false,
+  "JUDGE_NOTE": "The two answers provide completely different numbers and definitions. Answer 1 states there are 120,402 funded accounts and defines \"active\" as funded status. Answer 2 states there are 98,115 active accounts based on 90-day login activity and explicitly says there is no information about funded accounts. These are fundamentally different facts with different numbers (120,402 vs 98,115) and different definitions of what constitutes an \"active\" account (funded status vs 90-day login activity)."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q4",
+  "ANSWER_A": "1. I cannot determine the average balance of funded accounts from the information provided.\n\n2. While I know there are 120,402 active (funded) accounts, I would need total balance data or individual account balance information to calculate an average.",
+  "ANSWER_B": "I don't have information about the average balance of funded accounts in the materials provided to me.\n\nThe information I have covers active account counts and address change procedures, but does not include account balance data.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers convey the same core facts: (1) they cannot determine/don't have the average balance of funded accounts, and (2) they acknowledge having information about active account counts (Answer 1 mentions 120,402 active funded accounts, Answer 2 mentions \"active account counts\"). Both explain that balance data is not available in the provided information. The key difference is that Answer 1 provides the specific number 120,402 while Answer 2 refers to it more generally, and Answer 2 mentions \"address change procedures\" as additional context. However, the fundamental factual content about what they can and cannot answer regarding average balances is the same."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q5",
+  "ANSWER_A": "1. I cannot determine net new accounts from the information provided, as I only have the current total of 120,402 active accounts without historical data from 30 days ago.\n\n2. To answer this question, I would need either the active account count from 30 days ago or a separate report showing accounts funded and closed during that period.",
+  "ANSWER_B": "I don't have access to the data needed to calculate net new accounts from the last 30 days. To answer this question, I would need account creation and closure statistics from your system for that specific time period.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers convey the same core facts: (1) They cannot determine/calculate net new accounts, (2) They lack the necessary historical/time-period data needed to make this calculation, and (3) They would need additional information about account changes (creation/closure or historical count or funded/closed accounts) over the 30-day period. The key difference is only in wording - Answer 1 mentions having a current total of 120,402 accounts and is more specific about needing \"historical data from 30 days ago,\" while Answer 2 uses more general language about \"account creation and closure statistics.\" However, both communicate the same fundamental limitation and data requirements."
+ },
+ {
+  "PHASE": "before",
+  "PAIR": "ungoverned",
+  "QUESTION_ID": "Q6",
+  "ANSWER_A": "I don't have information about changing IRA beneficiaries in the procedures provided. Please contact our operations team or refer to the IRA beneficiary change procedures for specific requirements and processing times.",
+  "ANSWER_B": "I don't have information about changing IRA beneficiaries in the procedure provided. Please consult your team's IRA maintenance documentation or contact your supervisor for the correct beneficiary change process.",
+  "AGREE": true,
+  "JUDGE_NOTE": "Both answers convey the same core facts: (1) they lack information about changing IRA beneficiaries, (2) no specific numbers, steps, or timing are provided in either answer, and (3) both redirect the user to seek information elsewhere. While the specific sources differ slightly (operations team vs supervisor, procedures vs documentation), the fundamental facts are identical - neither provides actual information about the process and both acknowledge the same gap in knowledge."
+ }
+]

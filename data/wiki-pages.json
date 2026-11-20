@@ -1,0 +1,302 @@
+[
+  {
+    "doc_id": "WIKI-01",
+    "title": "Glossary: account",
+    "doc_type": "definition",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-03-04",
+    "status": "approved",
+    "term": "account",
+    "body": "An **account** is a single registration held at Northwind Financial, such as an individual brokerage, joint, IRA, Roth IRA, or cash management account. A client can hold several accounts."
+  },
+  {
+    "doc_id": "WIKI-02",
+    "title": "Glossary: client",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-03-04",
+    "status": "approved",
+    "term": "client",
+    "body": "A **client** is a person or entity that owns at least one account. Joint owners count as one client record each."
+  },
+  {
+    "doc_id": "WIKI-03",
+    "title": "Account opening handbook: what counts as active",
+    "doc_type": "definition",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2024-11-18",
+    "status": "approved",
+    "term": "active account",
+    "body": "For account opening and growth reporting, an **active account** is an account with status OPEN and a cash or securities balance greater than zero (a **funded** account). Login activity is not part of this definition."
+  },
+  {
+    "doc_id": "WIKI-04",
+    "title": "Glossary: funded account",
+    "doc_type": "definition",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-01-09",
+    "status": "approved",
+    "term": "funded account",
+    "body": "A **funded account** is an OPEN account with a balance greater than zero on the as-of date."
+  },
+  {
+    "doc_id": "WIKI-05",
+    "title": "Glossary: dormant account",
+    "doc_type": "definition",
+    "owner": "Operational Risk (Samira Haddad)",
+    "updated": "2025-02-21",
+    "status": "approved",
+    "term": "dormant account",
+    "body": "A **dormant account** is an OPEN account with no client-initiated activity (trade, transfer, or login) for 12 months or more."
+  },
+  {
+    "doc_id": "WIKI-06",
+    "title": "Glossary: household",
+    "doc_type": "definition",
+    "owner": "Advisor Platform (Jordan Reyes)",
+    "updated": "2025-04-02",
+    "status": "approved",
+    "term": "household",
+    "body": "A **household** groups clients who share an address and an advisor relationship."
+  },
+  {
+    "doc_id": "WIKI-07",
+    "title": "Procedure: change a client address (current)",
+    "doc_type": "procedure",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2026-06-12",
+    "status": "approved",
+    "term": "address change",
+    "body": "To change a client address: 1. Verify identity with two-factor authentication in the service console. 2. Submit service request type ADDRESS_CHANGE with the new address. 3. The change takes effect within **1 business day**. 4. A confirmation letter is mailed to both the old and the new address."
+  },
+  {
+    "doc_id": "WIKI-08",
+    "title": "Procedure: beneficiary change",
+    "doc_type": "procedure",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2026-02-03",
+    "status": "approved",
+    "term": "beneficiary change",
+    "body": "To change a beneficiary on an IRA or transfer-on-death account: verify identity, collect the signed beneficiary form, submit service request type BENEFICIARY_CHANGE. Turnaround is 3 business days."
+  },
+  {
+    "doc_id": "WIKI-09",
+    "title": "Procedure: close an account",
+    "doc_type": "procedure",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-09-30",
+    "status": "approved",
+    "term": "account closure",
+    "body": "To close an account: confirm a zero balance or a completed transfer out, submit service request type ACCOUNT_CLOSE, and record the closure reason code."
+  },
+  {
+    "doc_id": "WIKI-10",
+    "title": "Glossary: primary advisor",
+    "doc_type": "definition",
+    "owner": "Advisor Platform (Jordan Reyes)",
+    "updated": "2025-04-02",
+    "status": "approved",
+    "term": "primary advisor",
+    "body": "The **primary advisor** is the advisor of record on the account. Each account has exactly one."
+  },
+  {
+    "doc_id": "WIKI-11",
+    "title": "Service metrics guide: active accounts",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-08-27",
+    "status": "approved",
+    "term": "active account",
+    "body": "For service and engagement dashboards, an **active account** is an OPEN account whose owner has **logged in within the last 90 days**. Balance is not considered."
+  },
+  {
+    "doc_id": "WIKI-12",
+    "title": "Glossary: engaged account",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-08-27",
+    "status": "draft",
+    "term": "engaged account",
+    "body": "Draft. An **engaged account** may be an OPEN account with a client login in the last 90 days. Needs an owner decision."
+  },
+  {
+    "doc_id": "WIKI-13",
+    "title": "Glossary: service request",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-05-15",
+    "status": "approved",
+    "term": "service request",
+    "body": "A **service request** is a client or advisor request handled by Client Service, such as an address change, beneficiary change, transfer, statement copy, or account closure."
+  },
+  {
+    "doc_id": "WIKI-14",
+    "title": "Service level targets",
+    "doc_type": "policy",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2026-01-10",
+    "status": "approved",
+    "term": "service level",
+    "body": "Service level targets: address change 1 business day, beneficiary change 3 business days, transfer 5 business days, statement copy 2 business days."
+  },
+  {
+    "doc_id": "WIKI-15",
+    "title": "Glossary: net new accounts",
+    "doc_type": "definition",
+    "owner": "Data Office (Helen Okafor)",
+    "updated": "2026-04-01",
+    "status": "approved",
+    "term": "net new accounts",
+    "body": "**Net new accounts** for a period = accounts opened in the period minus accounts closed in the period."
+  },
+  {
+    "doc_id": "WIKI-16",
+    "title": "Glossary: average resolution time",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-05-15",
+    "status": "approved",
+    "term": "resolution time",
+    "body": "**Resolution time** is the number of calendar days from when a service request is opened to when it is closed. Open requests are excluded."
+  },
+  {
+    "doc_id": "WIKI-17",
+    "title": "Glossary: open service request",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-05-15",
+    "status": "approved",
+    "term": "open service request",
+    "body": "An **open service request** has status OPEN or IN_PROGRESS."
+  },
+  {
+    "doc_id": "WIKI-18",
+    "title": "Glossary: advisor region",
+    "doc_type": "definition",
+    "owner": "Advisor Platform (Jordan Reyes)",
+    "updated": "2025-04-02",
+    "status": "approved",
+    "term": "region",
+    "body": "Advisors belong to one of four regions: Northeast, Southeast, Central, or West."
+  },
+  {
+    "doc_id": "WIKI-19",
+    "title": "Procedure: change a client address (2019 version)",
+    "doc_type": "procedure",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2019-05-20",
+    "status": "approved",
+    "term": "address change",
+    "body": "To change a client address the client must send a **signed letter by mail**. Operations keys the change after a medallion signature check. Allow **5 business days**."
+  },
+  {
+    "doc_id": "WIKI-20",
+    "title": "Glossary: account type",
+    "doc_type": "definition",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-03-04",
+    "status": "approved",
+    "term": "account type",
+    "body": "Account types: Individual Brokerage, Joint Brokerage, Traditional IRA, Roth IRA, Cash Management."
+  },
+  {
+    "doc_id": "WIKI-21",
+    "title": "Glossary: as-of date",
+    "doc_type": "definition",
+    "owner": "Data Office (Helen Okafor)",
+    "updated": "2026-01-05",
+    "status": "approved",
+    "term": "as-of date",
+    "body": "Unless stated otherwise, reported counts use the data as of **2026-11-15**."
+  },
+  {
+    "doc_id": "WIKI-22",
+    "title": "Procedure: reopen a closed account",
+    "doc_type": "procedure",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-10-11",
+    "status": "approved",
+    "term": "account reopen",
+    "body": "A closed account can be reopened within 90 days of closure with a service request of type ACCOUNT_REOPEN."
+  },
+  {
+    "doc_id": "WIKI-23",
+    "title": "Glossary: client tenure",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-05-15",
+    "status": "approved",
+    "term": "client tenure",
+    "body": "**Client tenure** is the years since the client opened their first account."
+  },
+  {
+    "doc_id": "WIKI-24",
+    "title": "Glossary: average balance",
+    "doc_type": "definition",
+    "owner": "Data Office (Helen Okafor)",
+    "updated": "2026-04-01",
+    "status": "approved",
+    "term": "average balance",
+    "body": "**Average balance** is the mean balance across funded accounts. Unfunded accounts are excluded."
+  },
+  {
+    "doc_id": "WIKI-25",
+    "title": "Procedure: statement copy",
+    "doc_type": "procedure",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-07-07",
+    "status": "approved",
+    "term": "statement copy",
+    "body": "Statement copies for the last 7 years are available in the client portal. Older statements need a service request of type STATEMENT_COPY."
+  },
+  {
+    "doc_id": "WIKI-26",
+    "title": "Procedure: transfer between accounts",
+    "doc_type": "procedure",
+    "owner": "Account Operations (Priya Natarajan)",
+    "updated": "2025-07-07",
+    "status": "approved",
+    "term": "internal transfer",
+    "body": "Transfers between accounts with the same owner can be submitted in the portal and settle the next business day."
+  },
+  {
+    "doc_id": "WIKI-27",
+    "title": "Glossary: channel",
+    "doc_type": "definition",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-05-15",
+    "status": "approved",
+    "term": "channel",
+    "body": "Service requests arrive through one of three channels: Phone, Portal, or Branch."
+  },
+  {
+    "doc_id": "WIKI-28",
+    "title": "Glossary: advisor book",
+    "doc_type": "definition",
+    "owner": "Advisor Platform (Jordan Reyes)",
+    "updated": "2025-04-02",
+    "status": "approved",
+    "term": "advisor book",
+    "body": "An **advisor book** is the set of accounts where the advisor is the primary advisor."
+  },
+  {
+    "doc_id": "WIKI-29",
+    "title": "Data office FAQ: which definition wins?",
+    "doc_type": "policy",
+    "owner": "Data Office (Helen Okafor)",
+    "updated": "2026-05-18",
+    "status": "approved",
+    "term": "definition precedence",
+    "body": "When two pages define the same term differently, the data product owner decides. The approved definition is published in the semantic view, and the other page is marked superseded."
+  },
+  {
+    "doc_id": "WIKI-30",
+    "title": "Procedure: login troubleshooting",
+    "doc_type": "procedure",
+    "owner": "Client Service (Tomas Lindqvist)",
+    "updated": "2025-12-01",
+    "status": "approved",
+    "term": "login reset",
+    "body": "Clients reset portal passwords themselves. Locked accounts need a service request of type PASSWORD_RESET."
+  }
+]

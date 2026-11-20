@@ -1,0 +1,42 @@
+{
+  "model": "Account Operations Dashboard (fictional BI tool export)",
+  "exported_at": "2026-11-10",
+  "metrics": [
+    {
+      "name": "total_accounts",
+      "label": "Total accounts",
+      "expression": "COUNT(account_id)",
+      "owner": "Data Office (Helen Okafor)"
+    },
+    {
+      "name": "active_accounts",
+      "label": "Active accounts",
+      "expression": "COUNT_IF(status = 'OPEN' AND balance > 0)",
+      "owner": "Account Operations (Priya Natarajan)"
+    },
+    {
+      "name": "average_balance",
+      "label": "Average balance",
+      "expression": "AVG(balance) over funded accounts",
+      "owner": "Data Office (Helen Okafor)"
+    },
+    {
+      "name": "net_new_accounts_30d",
+      "label": "Net new accounts (30 days)",
+      "expression": "opened in last 30 days minus closed in last 30 days",
+      "owner": "Data Office (Helen Okafor)"
+    },
+    {
+      "name": "open_service_requests",
+      "label": "Open service requests",
+      "expression": "COUNT_IF(status IN ('OPEN','IN_PROGRESS'))",
+      "owner": "Client Service (Tomas Lindqvist)"
+    },
+    {
+      "name": "avg_resolution_days",
+      "label": "Average resolution days",
+      "expression": "AVG(DATEDIFF(day, opened_at, closed_at))",
+      "owner": "Client Service (Tomas Lindqvist)"
+    }
+  ]
+}

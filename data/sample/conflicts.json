@@ -1,0 +1,47 @@
+[
+ {
+  "CONFLICT_ID": "K1",
+  "TERM_ID": "T01",
+  "OPTION_DOC_ID": "WIKI-03",
+  "OPTION_LABEL": "Funded (open with a balance)",
+  "OPTION_DEFINITION": "An active account is an account with status OPEN and a cash or securities balance greater than zero (a funded account), and login activity is not part of this definition.",
+  "OPTION_SV_EXPRESSION": "SUM(ac.funded_flag)",
+  "AI_EXPLANATION": "• **What differs**: WIKI-03 defines active by funding (balance > $0), while WIKI-11 defines it by recent user engagement (login within 90 days). An unfunded account with recent logins would be inactive under WIKI-03 but active under WIKI-11; conversely, a funded account with no recent logins would be active under WIKI-03 but inactive under WIKI-11.\n\n• **Teams/reports affected**: WIKI-03 likely impacts finance, accounting, and regulatory reporting (asset custody, fee calculations, abandoned property); WIKI-11 likely affects marketing, product analytics, customer retention teams, and engagement dashboards that measure platform usage and customer health scores.\n\n• **Data owner should check**: Business objective of each report (regulatory compliance vs. engagement metrics), downstream dependencies (which systems/teams consume this metric), potential revenue or compliance impact of misclassification, and whether creating two distinct terms (\"funded account\" vs. \"engaged account\") would eliminate confusion."
+ },
+ {
+  "CONFLICT_ID": "K1",
+  "TERM_ID": "T01",
+  "OPTION_DOC_ID": "WIKI-11",
+  "OPTION_LABEL": "Logged in within 90 days",
+  "OPTION_DEFINITION": "An active account is an OPEN account whose owner has logged in within the last 90 days, regardless of balance.",
+  "OPTION_SV_EXPRESSION": "SUM(ac.recent_login_flag)",
+  "AI_EXPLANATION": "• **Key differences**: WIKI-03 defines active by funding (balance > $0), while WIKI-11 defines it by user engagement (90-day login); WIKI-03 explicitly excludes login behavior, WIKI-11 ignores balance entirely\n\n• **Team/report impact**: WIKI-03 affects Finance, Risk, Regulatory Capital reports (AUM calculations, custody fees, compliance filings); WIKI-11 affects Product, Marketing, Customer Success (engagement metrics, retention dashboards, reactivation campaigns)\n\n• **Data owner should check**: Which downstream systems and stakeholders consume \"active account\" metrics, whether regulatory definitions require balance-based logic, and if conflicting definitions have caused calculation errors or miscommunication between departments"
+ },
+ {
+  "CONFLICT_ID": "K2",
+  "TERM_ID": "T07",
+  "OPTION_DOC_ID": "WIKI-07",
+  "OPTION_LABEL": "Current procedure (2026)",
+  "OPTION_DEFINITION": "To change a client address, verify identity with two-factor authentication in the service console, submit service request type ADDRESS_CHANGE with the new address, and the change takes effect within 1 business day, with a confirmation letter mailed to both the old and the new address.",
+  "OPTION_SV_EXPRESSION": null,
+  "AI_EXPLANATION": "• **What differs**: WIKI-07 uses digital two-factor authentication with 1-day processing; WIKI-19 requires physical signed letter with medallion signature and 5-day processing—fundamentally different verification methods, timelines, and operational workflows.\n\n• **Teams/reports affected**: WIKI-07 impacts digital service teams, real-time CRM systems, and SLA dashboards tracking same-day changes; WIKI-19 affects mail operations, compliance teams validating medallion signatures, and reports measuring manual processing queues and 5-day turnaround metrics.\n\n• **Data owner should check**: Which address change scenario applies (routine updates vs. high-security accounts), regulatory requirements for identity verification by account type, current system capabilities, and whether one definition is outdated or if both legitimately coexist for different client segments or security tiers."
+ },
+ {
+  "CONFLICT_ID": "K2",
+  "TERM_ID": "T07",
+  "OPTION_DOC_ID": "WIKI-19",
+  "OPTION_LABEL": "2019 procedure",
+  "OPTION_DEFINITION": "To change a client address the client must send a signed letter by mail, and Operations keys the change after a medallion signature check, which takes 5 business days.",
+  "OPTION_SV_EXPRESSION": null,
+  "AI_EXPLANATION": "• **What differs**: Authentication method (2FA digital vs. medallion signature), submission channel (service console vs. postal mail), processing time (1 vs. 5 business days), and confirmation process (letters to both addresses vs. none specified)\n\n• **Teams/reports affected**: WIKI-07 likely applies to digital/retail banking teams, online service channels, and real-time CRM systems; WIKI-19 likely applies to wealth management, brokerage operations, and legacy back-office processing systems where different SLAs and audit trails are tracked\n\n• **Data owner should check**: Client segment or account type (retail vs. high-net-worth), regulatory requirements for each business line (some accounts may require medallion signatures by law), which systems of record are authoritative, and whether both processes are valid for different scenarios or one is outdated"
+ },
+ {
+  "CONFLICT_ID": "K3",
+  "TERM_ID": "T05",
+  "OPTION_DOC_ID": "BI:net_new_accounts_30d",
+  "OPTION_LABEL": "Add the BI metric to the semantic view",
+  "OPTION_DEFINITION": "Accounts opened in the last 30 days minus accounts closed in the last 30 days (defined in the BI export, missing from ACCOUNTS_SV).",
+  "OPTION_SV_EXPRESSION": "SUM(ac.opened_30d_flag) - SUM(ac.closed_30d_flag)",
+  "AI_EXPLANATION": "# Key Differences & Implications\n\n**What Differs:**\n- **BI definition**: Net change calculation (openings minus closures over 30 days) - measures account growth\n- **ACCOUNTS_SV**: Definition is missing/undefined - likely uses a different methodology or doesn't track this metric at all\n\n**Teams/Reports Affected:**\n- **BI definition** impacts: Executive dashboards, growth metrics, marketing campaign ROI reports, and teams using the BI export for trend analysis\n- **ACCOUNTS_SV** impacts: Operational teams, account management, compliance reporting, and any downstream systems relying on the service view as source of truth\n\n**Data Owner Should Check:**\n- Source data discrepancies (different account opening/closing timestamps, inclusion criteria like account types/statuses)\n- Whether ACCOUNTS_SV needs this metric added OR if BI should deprecate their calculation in favor of a standardized definition\n- Reconciliation between the two systems' raw account counts to identify root cause of divergence before standardizing"
+ }
+]

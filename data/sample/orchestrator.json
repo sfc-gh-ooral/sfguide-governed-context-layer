@@ -1,0 +1,25 @@
+[
+ {
+  "question": "How many active accounts do we have, how many service requests are open, and how many advisors are in the West region?",
+  "tools": [
+   "Advisors",
+   "Accounts",
+   "Service"
+  ],
+  "text": "The numbers below are as of November 15, 2026:\n\n- **Active accounts: 120,402.** (Accounts domain) The approved definition counts an account as active when its status is OPEN and its balance is above zero. Login activity doesn't count toward it.\n- **Open service requests: 1,997.** (Service domain) This counts requests with status OPEN or IN_PROGRESS.\n- **Advisors in the West region: 10.** (Advisors domain)"
+ },
+ {
+  "question": "What is the average resolution time for address change requests?",
+  "tools": [
+   "Service"
+  ],
+  "text": "Address change requests take an average of **3.49 days** to resolve. That covers the 6,874 address change requests opened between Nov 16, 2025 and Nov 15, 2026. Under the approved definition, open requests don't count toward the average.\n\n- **Service:** the average resolution days metric, filtered to address change requests."
+ },
+ {
+  "question": "How many advisors are there per region, and what is the total balance in their books?",
+  "tools": [
+   "Advisors"
+  ],
+  "text": "Each of the four regions has 10 advisors, so there are 40 in total. Their books hold about $28.97B combined. West is slightly ahead at about $7.31B. Northeast has about $7.22B, and Southeast and Central each have about $7.22B as well.\n\n- **Advisors:** The advisor counts by region and the book balances (the governed \"book assets\" measure, the sum of account balances in each book) both come from this domain."
+ }
+]

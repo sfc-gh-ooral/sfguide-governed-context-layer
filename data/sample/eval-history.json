@@ -1,0 +1,142 @@
+[
+ {
+  "DAY": "2026-11-01",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-01",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-02",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-02",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-03",
+  "PAIR": "governed",
+  "PCT": 33
+ },
+ {
+  "DAY": "2026-11-03",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-04",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-04",
+  "PAIR": "ungoverned",
+  "PCT": 33
+ },
+ {
+  "DAY": "2026-11-05",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-05",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-06",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-06",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-07",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-07",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-08",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-08",
+  "PAIR": "ungoverned",
+  "PCT": 33
+ },
+ {
+  "DAY": "2026-11-09",
+  "PAIR": "governed",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-09",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-10",
+  "PAIR": "governed",
+  "PCT": 67
+ },
+ {
+  "DAY": "2026-11-10",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-11",
+  "PAIR": "governed",
+  "PCT": 67
+ },
+ {
+  "DAY": "2026-11-11",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-12",
+  "PAIR": "governed",
+  "PCT": 83
+ },
+ {
+  "DAY": "2026-11-12",
+  "PAIR": "ungoverned",
+  "PCT": 33
+ },
+ {
+  "DAY": "2026-11-13",
+  "PAIR": "governed",
+  "PCT": 83
+ },
+ {
+  "DAY": "2026-11-13",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ },
+ {
+  "DAY": "2026-11-14",
+  "PAIR": "governed",
+  "PCT": 83
+ },
+ {
+  "DAY": "2026-11-14",
+  "PAIR": "ungoverned",
+  "PCT": 50
+ }
+]

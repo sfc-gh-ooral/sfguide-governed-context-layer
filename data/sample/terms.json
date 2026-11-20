@@ -1,0 +1,233 @@
+[
+ {
+  "id": "T01",
+  "term": "active account",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "Pending owner decision: two approved pages disagree (funded vs. logged in within 90 days).",
+  "owner": "Account Operations (Priya Natarajan)",
+  "source": "wiki",
+  "sourceRef": "WIKI-03, WIKI-11",
+  "status": "conflict",
+  "svName": "active_accounts",
+  "svExpression": "SUM(ac.funded_flag)",
+  "synonyms": [
+   "active accounts",
+   "live accounts"
+  ]
+ },
+ {
+  "id": "T02",
+  "term": "funded account",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "An OPEN account with a balance greater than zero on the as-of date.",
+  "owner": "Account Operations (Priya Natarajan)",
+  "source": "wiki",
+  "sourceRef": "WIKI-04",
+  "status": "approved",
+  "svName": "funded_accounts",
+  "svExpression": "SUM(ac.funded_flag)",
+  "synonyms": [
+   "funded accounts"
+  ]
+ },
+ {
+  "id": "T03",
+  "term": "total accounts",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "Every account record, open or closed.",
+  "owner": "Data Office (Helen Okafor)",
+  "source": "bi",
+  "sourceRef": "total_accounts",
+  "status": "approved",
+  "svName": "total_accounts",
+  "svExpression": "COUNT(ac.account_id)",
+  "synonyms": [
+   "number of accounts",
+   "account count"
+  ]
+ },
+ {
+  "id": "T04",
+  "term": "average balance",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "Mean balance across funded accounts.",
+  "owner": "Data Office (Helen Okafor)",
+  "source": "wiki",
+  "sourceRef": "WIKI-24",
+  "status": "approved",
+  "svName": "average_balance",
+  "svExpression": "AVG(NULLIF(ac.balance, 0))",
+  "synonyms": [
+   "avg balance",
+   "mean balance"
+  ]
+ },
+ {
+  "id": "T05",
+  "term": "net new accounts (30 days)",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "Accounts opened in the last 30 days minus accounts closed in the last 30 days.",
+  "owner": "Data Office (Helen Okafor)",
+  "source": "bi",
+  "sourceRef": "net_new_accounts_30d",
+  "status": "missing",
+  "svName": "net_new_accounts_30d",
+  "svExpression": "SUM(ac.opened_30d_flag) - SUM(ac.closed_30d_flag)",
+  "synonyms": [
+   "net new accounts",
+   "net account growth"
+  ]
+ },
+ {
+  "id": "T06",
+  "term": "engaged account",
+  "domain": "accounts",
+  "kind": "metric",
+  "definition": "Draft: an OPEN account with a client login in the last 90 days.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "wiki",
+  "sourceRef": "WIKI-12",
+  "status": "draft",
+  "svName": "engaged_accounts",
+  "svExpression": "SUM(ac.recent_login_flag)",
+  "synonyms": [
+   "engaged accounts"
+  ]
+ },
+ {
+  "id": "T07",
+  "term": "address change",
+  "domain": "service",
+  "kind": "procedure",
+  "definition": "Pending owner decision: the current page (1 business day, 2FA) and a 2019 page (mailed letter, 5 days) disagree.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "wiki",
+  "sourceRef": "WIKI-07, WIKI-19",
+  "status": "conflict",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "change of address",
+   "update address"
+  ]
+ },
+ {
+  "id": "T08",
+  "term": "open service request",
+  "domain": "service",
+  "kind": "metric",
+  "definition": "A service request with status OPEN or IN_PROGRESS.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "wiki",
+  "sourceRef": "WIKI-17",
+  "status": "approved",
+  "svName": "open_requests",
+  "svExpression": "SUM(sr.open_flag)",
+  "synonyms": [
+   "open tickets",
+   "pending requests"
+  ]
+ },
+ {
+  "id": "T09",
+  "term": "resolution time",
+  "domain": "service",
+  "kind": "metric",
+  "definition": "Calendar days from open to close; open requests excluded.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "wiki",
+  "sourceRef": "WIKI-16",
+  "status": "approved",
+  "svName": "avg_resolution_days",
+  "svExpression": "AVG(sr.resolution_days)",
+  "synonyms": [
+   "turnaround",
+   "days to resolve"
+  ]
+ },
+ {
+  "id": "T10",
+  "term": "beneficiary change",
+  "domain": "service",
+  "kind": "procedure",
+  "definition": "Verify identity, collect the signed form, submit BENEFICIARY_CHANGE; 3 business days.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "wiki",
+  "sourceRef": "WIKI-08",
+  "status": "approved",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "change beneficiary"
+  ]
+ },
+ {
+  "id": "T11",
+  "term": "advisor book",
+  "domain": "advisors",
+  "kind": "dimension",
+  "definition": "Accounts where the advisor is the primary advisor.",
+  "owner": "Advisor Platform (Jordan Reyes)",
+  "source": "wiki",
+  "sourceRef": "WIKI-28",
+  "status": "approved",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "book of business"
+  ]
+ },
+ {
+  "id": "T12",
+  "term": "region",
+  "domain": "advisors",
+  "kind": "dimension",
+  "definition": "Northeast, Southeast, Central, or West.",
+  "owner": "Advisor Platform (Jordan Reyes)",
+  "source": "wiki",
+  "sourceRef": "WIKI-18",
+  "status": "approved",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "territory"
+  ]
+ },
+ {
+  "id": "T13",
+  "term": "dormant account",
+  "domain": "accounts",
+  "kind": "definition",
+  "definition": "No client-initiated activity for 12 months or more.",
+  "owner": "Operational Risk (Samira Haddad)",
+  "source": "wiki",
+  "sourceRef": "WIKI-05",
+  "status": "approved",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "inactive account"
+  ]
+ },
+ {
+  "id": "T14",
+  "term": "client tenure",
+  "domain": "accounts",
+  "kind": "definition",
+  "definition": "Years since the client opened their first account.",
+  "owner": "Client Service (Tomas Lindqvist)",
+  "source": "inferred",
+  "sourceRef": "CANDIDATE_DEFINITIONS",
+  "status": "draft",
+  "svName": null,
+  "svExpression": null,
+  "synonyms": [
+   "tenure"
+  ]
+ }
+]
