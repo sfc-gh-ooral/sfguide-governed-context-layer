@@ -12,6 +12,15 @@ import type { Candidate, Term } from '@/lib/types';
 const SRC: Record<Term['source'], string> = { wiki: 'pill-source', bi: 'pill-draft', inferred: 'pill-sample' };
 type Tab = 'glossary' | 'wiki' | 'bi';
 type SortKey = 'term' | 'domain' | 'status' | 'owner';
+type Sort = { k: SortKey; dir: 1 | -1 };
+
+function Th({ k, sort, setSort, children }: { k: SortKey; sort: Sort; setSort: (f: (s: Sort) => Sort) => void; children: string }) {
+  return (
+    <th aria-sort={sort.k === k ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
+      <button onClick={() => setSort((s) => ({ k, dir: s.k === k ? (s.dir === 1 ? -1 : 1) : 1 }))}>{children}<ArrowDownUp className="w-3 h-3" aria-hidden /></button>
+    </th>
+  );
+}
 
 function TermDrawer({ t, onClose }: { t?: Term; onClose: () => void }) {
   return (
@@ -93,11 +102,7 @@ export default function Inventory() {
   }, [inv.data, q, status, sort]);
   const counts = (s: string) => (inv.data?.terms ?? []).filter((x) => s === 'all' || x.status === s).length;
   const cands = (inv.data?.candidates ?? []).filter((c) => !q || `${c.docId} ${c.title} ${c.term}`.toLowerCase().includes(q.toLowerCase()));
-  const Th = ({ k, children }: { k: SortKey; children: string }) => (
-    <th aria-sort={sort.k === k ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
-      <button onClick={() => setSort((s) => ({ k, dir: s.k === k ? (s.dir === 1 ? -1 : 1) : 1 }))}>{children}<ArrowDownUp className="w-3 h-3" aria-hidden /></button>
-    </th>
-  );
+  const th = (k: SortKey, children: string) => <Th k={k} sort={sort} setSort={setSort}>{children}</Th>;
 
   return (
     <>
@@ -142,7 +147,7 @@ export default function Inventory() {
             {!inv.data ? <div className="p-4"><Loading rows={6} /></div> : terms.length === 0 ? <Empty icon={<Search className="w-5 h-5" />} title="No terms match">Clear the search or pick another status.</Empty> : (
               <div className="scroll-x">
                 <table className="grid min-w-[760px]">
-                  <thead><tr><Th k="term">Term</Th><Th k="domain">Domain</Th><th>Semantic view</th><th>Source</th><Th k="owner">Owner</Th><Th k="status">Status</Th></tr></thead>
+                  <thead><tr>{th('term', 'Term')}{th('domain', 'Domain')}<th>Semantic view</th><th>Source</th>{th('owner', 'Owner')}{th('status', 'Status')}</tr></thead>
                   <tbody>
                     {terms.map((t) => (
                       <tr key={t.id} className="clickable" onClick={() => setTerm(t)} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setTerm(t)}>
